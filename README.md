@@ -65,7 +65,7 @@ This site is designed as a **3D-first experience**, not a flat corporate brochur
 
 ## Design Direction
 
-- **Dark, engineered palette** — deep graphite / midnight steel with a single confident accent. Reads as precision engineering.
+- **Light, engineered palette** — clean white base with a single confident accent. NIBE-style calm and restraint; reads as precision engineering. (White-only — no dark mode.)
 - **Large, confident typography** — big statements, generous whitespace, nothing crowded.
 - **Real photography, not stock** — the plants, the lines, the lab, the chassis.
 - **Motion with intent** — scroll-driven reveals and micro-interactions that guide attention. Never motion for its own sake.

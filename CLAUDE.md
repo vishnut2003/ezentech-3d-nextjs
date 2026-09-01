@@ -31,7 +31,7 @@ Build hero/feature sections with **React Three Fiber + drei** (3D), **GSAP + Scr
 
 ## Design System Rules
 
-- **Dark, engineered palette** — deep graphite / midnight steel base with a single confident accent colour.
+- **Light, engineered palette** — clean white base with a single confident accent colour (NIBE-style restraint). The design PDF proposed a dark palette, but the direction was changed to white-only — do not switch back to dark. No dark mode.
 - **Large, confident typography** — big statements, generous whitespace.
 - **Real photography only** — plants, lines, lab, chassis. No generic stock.
 - **Motion with intent** — scroll-driven reveals that guide attention; never decorative motion for its own sake.
