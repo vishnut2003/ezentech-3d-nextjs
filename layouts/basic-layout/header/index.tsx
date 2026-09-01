@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 
 const navLinks = [
   { label: "About", href: "/about" },
@@ -14,31 +13,17 @@ const navLinks = [
 ];
 
 export default function Header() {
-  // Transparent while at the top (over the hero), frosted once scrolled.
-  const [scrolled, setScrolled] = useState(false);
-  // The light-on-video treatment only applies over the homepage hero;
-  // inner pages have white backgrounds where it would be invisible.
+  // Light-on-dark treatment over the homepage hero; solid on inner pages,
+  // where white backgrounds would make it invisible.
   const isHome = usePathname() === "/";
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  // Solid/dark treatment whenever frosted or off the homepage.
-  const solid = scrolled || !isHome;
+  const solid = !isHome;
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-colors duration-300 ${
-        solid ? "bg-background/70 backdrop-blur-md" : "bg-transparent"
-      }`}
+      className={`relative z-50 ${solid ? "bg-background" : "bg-transparent"}`}
     >
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-8">
         <Link href="/" aria-label="Ezentech India — Home">
-          {/* Both variants stay mounted so the swap never flashes */}
           <Image
             src="/assets/business-logos/ezentech-logo-hrz.png"
             alt="Ezentech India"
