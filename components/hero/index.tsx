@@ -59,23 +59,40 @@ export default function Hero() {
         return s.top + s.height / 2 - (b.top + b.height / 2);
       };
 
+      // The next section rides up OVER the pinned full-bleed video during the
+      // last 90svh of the pin. Applied here (not in CSS) so no-JS and
+      // reduced-motion users keep normal document flow.
+      gsap.set("#capabilities", { marginTop: "-90svh" });
+
+      // Timing: expansion completes at exactly 55% of the 200% pin — the same
+      // moment the overlap window (last 90/200) begins. Section arrival and
+      // blur start together, right as the video reaches fullscreen.
+      const OVERLAP_START = 0.55;
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: "+=150%",
+          end: "+=200%",
           pin: true,
           scrub: 0.6,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const o = Math.max(
+              0,
+              (self.progress - OVERLAP_START) / (1 - OVERLAP_START),
+            );
+            // Filter fully removed at rest — even blur(0px) rasterizes the
+            // video layer and softens it everywhere.
+            box.style.filter =
+              o > 0.001
+                ? `blur(${(o * 26).toFixed(1)}px) brightness(${(1 - 0.35 * o).toFixed(3)})`
+                : "";
+          },
         },
       });
 
-      tl.to(
-        copy,
-        { x: -90, autoAlpha: 0, duration: 0.35, ease: "power1.in" },
-        0,
-      )
+      tl.to(copy, { x: -90, autoAlpha: 0, duration: 0.2, ease: "power1.in" }, 0)
         .to(
           box,
           {
@@ -85,13 +102,15 @@ export default function Hero() {
             borderRadius: 0,
             borderColor: "rgba(255,255,255,0)",
             boxShadow: "0 0 0 rgba(0,0,0,0)",
-            duration: 0.6,
+            duration: 0.5,
             ease: "power2.inOut",
           },
-          0.08,
+          0.05,
         )
-        // Hold the full-bleed frame before the pin releases.
-        .to({}, { duration: 0.3 });
+        // Full-bleed exactly at 0.55 of the timeline; the overlap + blur
+        // phase fills the remainder.
+        .to({}, { duration: 0.45 });
+
     },
     { scope: sectionRef, dependencies: [reducedMotion], revertOnUpdate: true },
   );
