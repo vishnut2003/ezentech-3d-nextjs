@@ -27,6 +27,15 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
+/* Split/slide transitions translate content beyond the viewport edge;
+   clip (not hidden — it creates no scroll container, so sticky and
+   ScrollTrigger pinning stay intact) keeps the horizontal scrollbar
+   from ever appearing. */
+html,
+body {
+  overflow-x: clip;
+}
+
 /* Lenis smooth scroll */
 html.lenis,
 html.lenis body {

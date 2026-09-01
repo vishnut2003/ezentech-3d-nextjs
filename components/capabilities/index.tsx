@@ -91,6 +91,10 @@ export default function Capabilities() {
         zIndex: 0,
       });
 
+      // Slide 2 (outdoor unit) waits below the frame; shown here so no-JS
+      // and reduced-motion users are never left with overlapping slides.
+      gsap.set(".pr-slide-2", { display: "block", yPercent: 110 });
+
       // The stage's arrival is time-based, not scrubbed. The stage itself
       // FADES only (scaling the wrapper would zoom the live canvas and read
       // as the model jumping); the zoom-from-depth lives on the copy alone.
@@ -112,41 +116,72 @@ export default function Capabilities() {
         );
       let revealShown = false;
 
-      // Exit: pin, split the columns apart (scrubbed — the curtain), fade
-      // the sheet, and trigger the stage's one-shot arrival.
+      // Slide 2's copy zooms in the same way, one-shot, as the swap lands.
+      gsap.set(".pr-copy-2", { scale: 0.88, autoAlpha: 0 });
+      const slide2Tl = gsap
+        .timeline({ paused: true })
+        .to(".pr-copy-2", {
+          scale: 1,
+          autoAlpha: 1,
+          duration: 0.7,
+          ease: "power2.out",
+        });
+      let slide2Shown = false;
+
+      // Master pin, now spanning two acts: the curtain exit revealing the
+      // stage, then the slide swap — slide 1 (copy, indoor unit, floor)
+      // rides up and out while slide 2 rides up into its place.
       gsap
         .timeline({
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: "+=150%",
+            end: "+=320%",
             pin: true,
             scrub: 0.6,
             anticipatePin: 1,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
-              const shouldShow = self.progress > 0.32;
+              const shouldShow = self.progress > 0.16;
               if (shouldShow !== revealShown) {
                 revealShown = shouldShow;
                 if (shouldShow) revealTl.play();
                 else revealTl.reverse();
               }
+              const showSlide2 = self.progress > 0.62;
+              if (showSlide2 !== slide2Shown) {
+                slide2Shown = showSlide2;
+                if (showSlide2) slide2Tl.play();
+                else slide2Tl.reverse();
+              }
             },
           },
         })
+        // Act 1: split the columns, fade the sheet.
         .to(
           ".cap-left",
-          { xPercent: -70, autoAlpha: 0, duration: 0.4, ease: "power2.in" },
+          { xPercent: -70, autoAlpha: 0, duration: 0.2, ease: "power2.in" },
           0,
         )
         .to(
           ".cap-scene-exit",
-          { xPercent: 70, autoAlpha: 0, duration: 0.4, ease: "power2.in" },
+          { xPercent: 70, autoAlpha: 0, duration: 0.2, ease: "power2.in" },
           0,
         )
-        .to(".cap-sheet", { autoAlpha: 0, duration: 0.3 }, 0.28)
-        // Settle on the finished stage before the pin releases.
-        .to({}, { duration: 0.42 });
+        .to(".cap-sheet", { autoAlpha: 0, duration: 0.14 }, 0.13)
+        // Act 2: the slide swap.
+        .to(
+          ".pr-slide-1",
+          { yPercent: -110, duration: 0.25, ease: "power2.inOut" },
+          0.55,
+        )
+        .to(
+          ".pr-slide-2",
+          { yPercent: 0, duration: 0.25, ease: "power2.inOut" },
+          0.55,
+        )
+        // Settle on the outdoor unit before the pin releases.
+        .to({}, { duration: 0.2 });
 
       ScrollTrigger.refresh();
     },
@@ -160,14 +195,14 @@ export default function Capabilities() {
       className="relative z-20"
       aria-label="In-house manufacturing capabilities"
     >
-      <div className="cap-sheet relative z-10">
+      <div className="cap-sheet relative z-10 flex min-h-svh flex-col">
         {/* Dark backdrop behind the rounded top: the corner notches would
             otherwise expose the white pin-spacer area as the hero releases. */}
         <div
           aria-hidden="true"
           className="absolute inset-x-0 top-0 h-16 bg-[#05080f]"
         />
-        <div className="cap-bg relative rounded-t-[3rem] shadow-[0_-24px_80px_rgba(3,8,20,0.45)]">
+        <div className="cap-bg relative flex flex-1 items-center rounded-t-[3rem] shadow-[0_-24px_80px_rgba(3,8,20,0.45)]">
           <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-16 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:px-8 lg:py-24">
             <div className="cap-left">
               <div className="cap-heading">
