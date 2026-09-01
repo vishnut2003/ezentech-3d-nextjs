@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const navLinks = [
@@ -12,8 +13,15 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full max-w-7xl items-center justify-between px-6 lg:px-8">
-        <Link href="/" className="text-lg font-semibold tracking-wide">
-          EZEN<span className="text-accent">TECH</span>
+        <Link href="/" aria-label="Ezentech India — Home">
+          <Image
+            src="/assets/business-logos/ezentech-logo-hrz.png"
+            alt="Ezentech India"
+            width={1088}
+            height={330}
+            priority
+            className="h-10 w-auto"
+          />
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
