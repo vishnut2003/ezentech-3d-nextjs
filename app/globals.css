@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Light, engineered palette — clean white base with a single confident accent */
+/* Light, engineered palette — clean white base with the Ezentech navy accent */
 :root {
   --background: #ffffff;
   --surface: #f5f7fa;
@@ -25,4 +25,70 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Lenis smooth scroll */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* Hero backdrop: midnight-navy studio scene (video look, rebuilt in CSS) */
+.hero-bg {
+  background:
+    radial-gradient(60% 55% at 78% 42%, rgba(64, 116, 224, 0.26), transparent 70%),
+    radial-gradient(45% 40% at 15% 8%, rgba(64, 116, 224, 0.1), transparent 70%),
+    radial-gradient(130% 110% at 50% 45%, transparent 55%, rgba(0, 0, 0, 0.55) 100%),
+    linear-gradient(180deg, #05080f 0%, #060b16 55%, #0a1322 100%);
+}
+
+/* Very faint graph grid across the scene */
+.hero-grid-fine {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.045) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(75% 70% at 70% 30%, black 25%, transparent 80%);
+}
+
+/* Perspective floor grid receding toward a horizon */
+.hero-floor {
+  position: absolute;
+  left: -25%;
+  right: -25%;
+  bottom: -18%;
+  height: 58%;
+  background-image:
+    linear-gradient(rgba(86, 132, 222, 0.17) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(86, 132, 222, 0.17) 1px, transparent 1px);
+  background-size: 90px 90px;
+  transform: perspective(750px) rotateX(58deg);
+  transform-origin: 50% 0%;
+  mask-image: radial-gradient(72% 95% at 50% 12%, black 25%, transparent 82%);
+}
+
+@keyframes hero-scroll-hint {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translateY(6px);
+    opacity: 0.4;
+  }
+}
+.hero-scroll-hint-chevron {
+  animation: hero-scroll-hint 1.8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-scroll-hint-chevron {
+    animation: none;
+  }
 }
