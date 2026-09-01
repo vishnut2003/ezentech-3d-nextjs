@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 // Heavy 3D loads lazily; it must never block the page.
 const ProductScene = dynamic(() => import("./scene"), { ssr: false });
 const OduScene = dynamic(() => import("./odu-scene"), { ssr: false });
+const WindowScene = dynamic(() => import("./window-scene"), { ssr: false });
 
 /**
  * Dark stage revealed from behind the capabilities sheet, holding TWO
@@ -99,6 +100,42 @@ export default function ProductReveal() {
                   className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-foreground transition-opacity hover:opacity-90"
                 >
                   explore IDU / ODU
+                  <span aria-hidden="true">→</span>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Slide 3 — the window unit; hidden until GSAP arms the swap */}
+        <div className="pr-slide-3 absolute inset-0 hidden">
+          <div className="hero-floor" aria-hidden="true" />
+          <div className="absolute inset-0">
+            <WindowScene compact={compact} />
+          </div>
+
+          <div className="pointer-events-none relative z-10 mx-auto flex h-full w-full max-w-7xl flex-col justify-end px-6 pb-14 lg:justify-center lg:pb-0 lg:px-8">
+            <div className="pr-copy-3 max-w-sm lg:max-w-md">
+              <p className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-white/60">
+                <span aria-hidden="true" className="h-px w-8 bg-white/40" />
+                The full range
+              </p>
+              <h2 className="mt-3 text-4xl font-semibold leading-[1.02] tracking-tight text-white sm:text-5xl lg:text-6xl">
+                Window. Inverter.
+                <br />
+                Every format.
+              </h2>
+              <p className="mt-4 max-w-sm text-base leading-7 text-white/60">
+                From compact window units to high-efficiency inverter ranges —
+                one manufacturing partner across every format your market asks
+                for.
+              </p>
+              <div className="pointer-events-auto mt-7">
+                <Link
+                  href="/products"
+                  className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-foreground transition-opacity hover:opacity-90"
+                >
+                  see the full range
                   <span aria-hidden="true">→</span>
                 </Link>
               </div>

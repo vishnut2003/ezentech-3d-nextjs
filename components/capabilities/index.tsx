@@ -91,9 +91,10 @@ export default function Capabilities() {
         zIndex: 0,
       });
 
-      // Slide 2 (outdoor unit) waits below the frame; shown here so no-JS
-      // and reduced-motion users are never left with overlapping slides.
+      // Slides 2 and 3 wait below the frame; shown here so no-JS and
+      // reduced-motion users are never left with overlapping slides.
       gsap.set(".pr-slide-2", { display: "block", yPercent: 110 });
+      gsap.set(".pr-slide-3", { display: "block", yPercent: 110 });
 
       // The stage's arrival is time-based, not scrubbed. The stage itself
       // FADES only (scaling the wrapper would zoom the live canvas and read
@@ -116,7 +117,8 @@ export default function Capabilities() {
         );
       let revealShown = false;
 
-      // Slide 2's copy zooms in the same way, one-shot, as the swap lands.
+      // Slides 2 and 3 copy zooms in the same way, one-shot, as each swap
+      // lands.
       gsap.set(".pr-copy-2", { scale: 0.88, autoAlpha: 0 });
       const slide2Tl = gsap
         .timeline({ paused: true })
@@ -128,6 +130,17 @@ export default function Capabilities() {
         });
       let slide2Shown = false;
 
+      gsap.set(".pr-copy-3", { scale: 0.88, autoAlpha: 0 });
+      const slide3Tl = gsap
+        .timeline({ paused: true })
+        .to(".pr-copy-3", {
+          scale: 1,
+          autoAlpha: 1,
+          duration: 0.7,
+          ease: "power2.out",
+        });
+      let slide3Shown = false;
+
       // Master pin, now spanning two acts: the curtain exit revealing the
       // stage, then the slide swap — slide 1 (copy, indoor unit, floor)
       // rides up and out while slide 2 rides up into its place.
@@ -136,23 +149,29 @@ export default function Capabilities() {
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: "+=320%",
+            end: "+=620%",
             pin: true,
             scrub: 0.6,
             anticipatePin: 1,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
-              const shouldShow = self.progress > 0.16;
+              const shouldShow = self.progress > 0.09;
               if (shouldShow !== revealShown) {
                 revealShown = shouldShow;
                 if (shouldShow) revealTl.play();
                 else revealTl.reverse();
               }
-              const showSlide2 = self.progress > 0.62;
+              const showSlide2 = self.progress > 0.36;
               if (showSlide2 !== slide2Shown) {
                 slide2Shown = showSlide2;
                 if (showSlide2) slide2Tl.play();
                 else slide2Tl.reverse();
+              }
+              const showSlide3 = self.progress > 0.58;
+              if (showSlide3 !== slide3Shown) {
+                slide3Shown = showSlide3;
+                if (showSlide3) slide3Tl.play();
+                else slide3Tl.reverse();
               }
             },
           },
@@ -160,28 +179,50 @@ export default function Capabilities() {
         // Act 1: split the columns, fade the sheet.
         .to(
           ".cap-left",
-          { xPercent: -70, autoAlpha: 0, duration: 0.2, ease: "power2.in" },
+          { xPercent: -70, autoAlpha: 0, duration: 0.1, ease: "power2.in" },
           0,
         )
         .to(
           ".cap-scene-exit",
-          { xPercent: 70, autoAlpha: 0, duration: 0.2, ease: "power2.in" },
+          { xPercent: 70, autoAlpha: 0, duration: 0.1, ease: "power2.in" },
           0,
         )
-        .to(".cap-sheet", { autoAlpha: 0, duration: 0.14 }, 0.13)
-        // Act 2: the slide swap.
+        .to(".cap-sheet", { autoAlpha: 0, duration: 0.07 }, 0.07)
+        // Act 2: first swap — indoor unit out, outdoor unit in.
         .to(
           ".pr-slide-1",
-          { yPercent: -110, duration: 0.25, ease: "power2.inOut" },
-          0.55,
+          { yPercent: -110, duration: 0.13, ease: "power2.inOut" },
+          0.3,
         )
         .to(
           ".pr-slide-2",
-          { yPercent: 0, duration: 0.25, ease: "power2.inOut" },
-          0.55,
+          { yPercent: 0, duration: 0.13, ease: "power2.inOut" },
+          0.3,
         )
-        // Settle on the outdoor unit before the pin releases.
-        .to({}, { duration: 0.2 });
+        // Act 3: second swap — outdoor unit out, window unit in.
+        .to(
+          ".pr-slide-2",
+          { yPercent: -110, duration: 0.13, ease: "power2.inOut" },
+          0.51,
+        )
+        .to(
+          ".pr-slide-3",
+          { yPercent: 0, duration: 0.13, ease: "power2.inOut" },
+          0.51,
+        )
+        // Long viewing hold on the window unit (~0.64 → 0.85), then
+        // Act 4: the stage zooms out into depth while the quality sheet
+        // (margin overlap below) slides up over it.
+        .to(
+          ".reveal-inner",
+          { scale: 0.9, duration: 0.1, ease: "power2.in" },
+          0.85,
+        )
+        .to({}, { duration: 0.05 });
+
+      // The quality section rides up OVER the receding stage during the
+      // last 100svh of the pin (same curtain mechanism as hero→sheet).
+      gsap.set("#quality", { marginTop: "-100svh" });
 
       ScrollTrigger.refresh();
     },
