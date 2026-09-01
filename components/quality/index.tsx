@@ -122,10 +122,11 @@ export default function Quality() {
 
           <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {certifications.map((certification) => (
-              <div
-                key={certification.label}
-                className="quality-card group rounded-2xl border border-border bg-background/70 p-4 backdrop-blur transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-lg hover:shadow-accent/5"
-              >
+              // Outer element is GSAP's entrance target only; the hover
+              // transition lives on the inner wrapper so CSS and GSAP never
+              // animate the same element.
+              <div key={certification.label} className="quality-card group">
+                <div className="rounded-2xl border border-border bg-background/70 p-4 backdrop-blur transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-lg hover:shadow-accent/5">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 text-accent">
                   <svg
                     className="h-4 w-4"
@@ -154,6 +155,7 @@ export default function Quality() {
                 <p className="mt-1 text-sm leading-6 text-muted">
                   {certification.detail}
                 </p>
+                </div>
               </div>
             ))}
           </div>
