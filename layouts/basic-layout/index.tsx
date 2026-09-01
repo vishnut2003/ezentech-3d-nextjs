@@ -1,5 +1,5 @@
 import Header from "./header";
-// import Footer from "./footer";
+import Footer from "./footer";
 
 export default function BasicLayout({
   children,
@@ -10,7 +10,7 @@ export default function BasicLayout({
     <>
       <Header />
       <main className="flex-1">{children}</main>
-      {/* <Footer /> */}
+      <Footer />
     </>
   );
 }

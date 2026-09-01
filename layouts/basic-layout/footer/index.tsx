@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 const footerColumns = [
@@ -35,10 +36,14 @@ export default function Footer() {
     <footer className="border-t border-border bg-surface">
       <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:px-8">
         <div>
-          <p className="text-lg font-semibold tracking-wide">
-            EZEN<span className="text-accent">TECH</span>
-          </p>
-          <p className="mt-3 max-w-xs text-sm leading-6 text-muted">
+          <Image
+            src="/assets/business-logos/ezentech-logo-hrz.png"
+            alt="Ezentech India"
+            width={1088}
+            height={330}
+            className="h-9 w-auto"
+          />
+          <p className="mt-4 max-w-xs text-sm leading-6 text-muted">
             OEM / ODM air-conditioner manufacturing — four plants, 1M-unit
             capacity, NABL-accredited testing, and in-house components from
             coil to chassis.

@@ -2,6 +2,7 @@ import BasicLayout from "@/layouts/basic-layout";
 import Hero from "@/components/hero";
 import Capabilities from "@/components/capabilities";
 import Quality from "@/components/quality";
+import Cta from "@/components/cta";
 
 export default function Home() {
   return (
@@ -9,6 +10,7 @@ export default function Home() {
       <Hero />
       <Capabilities />
       <Quality />
+      <Cta />
     </BasicLayout>
   );
 }
