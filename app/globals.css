@@ -73,6 +73,25 @@ html.lenis body {
   mask-image: radial-gradient(72% 95% at 50% 12%, black 25%, transparent 82%);
 }
 
+/* Capabilities sheet: soft radial tints over the white base — navy glows
+   behind the heading and the 3D panel, a whisper of copper low-centre */
+.cap-bg {
+  background:
+    radial-gradient(55% 45% at 12% 5%, rgba(44, 56, 138, 0.16), transparent 70%),
+    radial-gradient(50% 55% at 90% 25%, rgba(44, 56, 138, 0.13), transparent 70%),
+    radial-gradient(45% 40% at 55% 100%, rgba(176, 106, 47, 0.1), transparent 70%),
+    var(--background);
+}
+
+/* Faint engineering grid for the 3D stage panel, fading out radially */
+.stage-grid {
+  background-image:
+    linear-gradient(var(--border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--border) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(80% 80% at 50% 45%, black 30%, transparent 88%);
+}
+
 @keyframes hero-scroll-hint {
   0%,
   100% {

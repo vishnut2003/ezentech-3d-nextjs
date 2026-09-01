@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, type RefObject } from "react";
+import { useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import {
   ContactShadows,
@@ -30,14 +30,13 @@ const rowsY = (col: number) =>
   Array.from({ length: ROWS }, (_, i) => ROW_Y0 + i * ROW_STEP + col * STAGGER);
 
 type HeatExchangerProps = {
-  progressRef: RefObject<number>;
   reducedMotion: boolean;
 };
 
 /** Detailed procedural fin-and-tube heat-exchanger block: instanced fin
  *  pack, staggered copper circuit with serpentine U-bends, header manifold
  *  with curved line-set, steel end plates and feet. */
-function HeatExchanger({ progressRef, reducedMotion }: HeatExchangerProps) {
+function HeatExchanger({ reducedMotion }: HeatExchangerProps) {
   const group = useRef<Group>(null);
 
   const fins = useMemo(
@@ -90,16 +89,16 @@ function HeatExchanger({ progressRef, reducedMotion }: HeatExchangerProps) {
     [],
   );
 
+  // Gentle sway around a fixed 3/4 hero angle — the fin pack and copper
+  // circuit stay presented; the model never turns to a dull face-on view.
   useFrame((state) => {
-    if (!group.current) return;
-    const p = progressRef.current ?? 0;
-    const idle = reducedMotion ? 0 : state.clock.elapsedTime * 0.1;
-    // Scroll progress adds a slow, deliberate turn on top of the idle spin.
-    group.current.rotation.y = -0.5 + idle + p * Math.PI * 1.1;
+    if (!group.current || reducedMotion) return;
+    group.current.rotation.y =
+      -0.55 + Math.sin(state.clock.elapsedTime * 0.35) * 0.3;
   });
 
   return (
-    <group ref={group} rotation={[0.16, -0.5, 0]} scale={0.92}>
+    <group ref={group} rotation={[0.16, -0.55, 0]} scale={1.02}>
       {/* Aluminium fin pack */}
       <Instances limit={FIN_COUNT}>
         <boxGeometry args={[0.02, 2.16, 0.98]} />
@@ -177,14 +176,10 @@ function HeatExchanger({ progressRef, reducedMotion }: HeatExchangerProps) {
 /* ----------------------------------------------------------------- scene */
 
 type CoilSceneProps = {
-  progressRef: RefObject<number>;
   reducedMotion: boolean;
 };
 
-export default function CoilScene({
-  progressRef,
-  reducedMotion,
-}: CoilSceneProps) {
+export default function CoilScene({ reducedMotion }: CoilSceneProps) {
   return (
     <Canvas
       camera={{ position: [0, 0.35, 7], fov: 35 }}
@@ -211,15 +206,15 @@ export default function CoilScene({
         rotationIntensity={0.15}
         floatIntensity={0.4}
       >
-        <HeatExchanger progressRef={progressRef} reducedMotion={reducedMotion} />
+        <HeatExchanger reducedMotion={reducedMotion} />
       </Float>
 
       <ContactShadows
-        position={[0, -2, 0]}
-        scale={8}
-        blur={2.6}
+        position={[0, -1.35, 0]}
+        scale={12}
+        blur={2.4}
         opacity={0.16}
-        far={3}
+        far={3.5}
         resolution={256}
         color="#1a2340"
       />

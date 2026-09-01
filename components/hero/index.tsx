@@ -59,11 +59,6 @@ export default function Hero() {
         return s.top + s.height / 2 - (b.top + b.height / 2);
       };
 
-      // The next section rides up OVER the pinned full-bleed video during the
-      // last 90svh of the pin. Applied here (not in CSS) so no-JS and
-      // reduced-motion users keep normal document flow.
-      gsap.set("#capabilities", { marginTop: "-90svh" });
-
       // Timing: expansion completes at exactly 55% of the 200% pin — the same
       // moment the overlap window (last 90/200) begins. Section arrival and
       // blur start together, right as the video reaches fullscreen.
@@ -110,6 +105,14 @@ export default function Hero() {
         // Full-bleed exactly at 0.55 of the timeline; the overlap + blur
         // phase fills the remainder.
         .to({}, { duration: 0.45 });
+
+      // The next section rides up OVER the pinned full-bleed video during the
+      // last 90svh of the pin. Applied AFTER the pin exists, followed by a
+      // synchronous refresh, so margin + spacer land in the same tick —
+      // otherwise the section flashes over the hero for a frame on reload.
+      // (Set via GSAP, not CSS, so no-JS/reduced-motion keep normal flow.)
+      gsap.set("#capabilities", { marginTop: "-90svh" });
+      ScrollTrigger.refresh();
 
     },
     { scope: sectionRef, dependencies: [reducedMotion], revertOnUpdate: true },
