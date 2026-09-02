@@ -40,7 +40,7 @@ export default function ProductReveal() {
         {/* Slide 1 — the finished indoor unit */}
         <div className="pr-slide-1 absolute inset-0">
           <div className="hero-floor" aria-hidden="true" />
-          <div className="absolute inset-0">
+          <div className="pr-scene-1 absolute inset-0">
             <ProductScene compact={compact} />
           </div>
 
@@ -70,12 +70,19 @@ export default function ProductReveal() {
               </div>
             </div>
           </div>
+
+          {/* Caption pill */}
+          <p className="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center">
+            <span className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-white/50 backdrop-blur">
+              01 — Split indoor unit · assembled on our lines
+            </span>
+          </p>
         </div>
 
         {/* Slide 2 — the outdoor unit; hidden until GSAP arms the swap */}
         <div className="pr-slide-2 absolute inset-0 hidden">
           <div className="hero-floor" aria-hidden="true" />
-          <div className="absolute inset-0">
+          <div className="pr-scene-2 absolute inset-0">
             <OduScene compact={compact} />
           </div>
 
@@ -105,12 +112,19 @@ export default function ProductReveal() {
               </div>
             </div>
           </div>
+
+          {/* Caption pill */}
+          <p className="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center">
+            <span className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-white/50 backdrop-blur">
+              02 — Outdoor unit · engineered as a matched pair
+            </span>
+          </p>
         </div>
 
         {/* Slide 3 — the window unit; hidden until GSAP arms the swap */}
         <div className="pr-slide-3 absolute inset-0 hidden">
           <div className="hero-floor" aria-hidden="true" />
-          <div className="absolute inset-0">
+          <div className="pr-scene-3 absolute inset-0">
             <WindowScene compact={compact} />
           </div>
 
@@ -141,6 +155,37 @@ export default function ProductReveal() {
               </div>
             </div>
           </div>
+
+          {/* Caption pill */}
+          <p className="pointer-events-none absolute inset-x-0 bottom-6 z-10 flex justify-center">
+            <span className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-white/50 backdrop-blur">
+              03 — Window unit · the compact format
+            </span>
+          </p>
+        </div>
+
+        {/* Accent sheen that sweeps through the frame during each slide
+            swap — armed and driven by the capabilities master timeline. */}
+        <div
+          aria-hidden="true"
+          className="pr-wipe pointer-events-none absolute inset-0 z-20 opacity-0 bg-[linear-gradient(to_top,transparent,rgba(64,116,224,0.10)_38%,rgba(255,255,255,0.05)_50%,rgba(64,116,224,0.10)_62%,transparent)]"
+        />
+
+        {/* Slide rail — 01/02/03 with an animated active tick; revealed and
+            driven by GSAP only, so no-JS and reduced-motion users never see
+            a dead control. */}
+        <div
+          aria-hidden="true"
+          className="pr-slide-rail pointer-events-none absolute right-6 top-1/2 z-20 hidden -translate-y-1/2 flex-col items-end gap-6 opacity-0 lg:right-10 lg:flex"
+        >
+          {[1, 2, 3].map((n) => (
+            <div key={n} className={`pr-dot-${n} flex items-center gap-3`}>
+              <span className="pr-dot-num font-mono text-[11px] font-semibold tracking-[0.16em] text-white">
+                0{n}
+              </span>
+              <span className="pr-dot-line h-px w-6 origin-right bg-white/20" />
+            </div>
+          ))}
         </div>
       </div>
     </div>

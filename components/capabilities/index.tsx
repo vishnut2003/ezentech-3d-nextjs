@@ -100,6 +100,35 @@ export default function Capabilities() {
       gsap.set(".pr-slide-2", { display: "block", yPercent: 110 });
       gsap.set(".pr-slide-3", { display: "block", yPercent: 110 });
 
+      // Slide rail: armed only when the pinned story runs (class has
+      // opacity-0). The active number/tick animates on each swap.
+      gsap.set(".pr-slide-rail", { autoAlpha: 1 });
+      const setActiveSlide = (n: number) => {
+        for (let i = 1; i <= 3; i++) {
+          const active = i === n;
+          gsap.to(`.pr-dot-${i} .pr-dot-num`, {
+            opacity: active ? 1 : 0.3,
+            duration: 0.3,
+            overwrite: "auto",
+          });
+          gsap.to(`.pr-dot-${i} .pr-dot-line`, {
+            scaleX: active ? 1.8 : 1,
+            backgroundColor: active ? "#4074e0" : "rgba(255,255,255,0.2)",
+            duration: 0.3,
+            overwrite: "auto",
+          });
+        }
+      };
+      let activeSlide = 0;
+      const syncActiveSlide = (progress: number) => {
+        const n = progress > 0.68 ? 3 : progress > 0.51 ? 2 : 1;
+        if (n !== activeSlide) {
+          activeSlide = n;
+          setActiveSlide(n);
+        }
+      };
+      syncActiveSlide(0);
+
       // The stage's arrival is time-based, not scrubbed. The stage itself
       // FADES only (scaling the wrapper would zoom the live canvas and read
       // as the model jumping); the zoom-from-depth lives on the copy alone.
@@ -184,6 +213,7 @@ export default function Capabilities() {
                 if (showSlide3) slide3Tl.play();
                 else slide3Tl.reverse();
               }
+              syncActiveSlide(self.progress);
             },
           },
         })
@@ -212,15 +242,47 @@ export default function Capabilities() {
         )
         .to(".cap-sheet", { autoAlpha: 0, duration: 0.07 }, HOLD + 0.07)
         // Act 2: first swap — indoor unit out, outdoor unit in.
+        // Depth split: the outgoing copy leads the ride out while its scene
+        // lags behind; the incoming copy and scene settle in sequence.
+        // Translations only — scaling a canvas ancestor would shift models.
         .to(
           ".pr-slide-1",
           { yPercent: -110, duration: 0.13, ease: "power2.inOut" },
           HOLD + 0.3,
         )
         .to(
+          ".reveal-copy",
+          { yPercent: -35, duration: 0.13, ease: "power2.in" },
+          HOLD + 0.3,
+        )
+        .to(
+          ".pr-scene-1",
+          { yPercent: 18, duration: 0.13, ease: "power2.inOut" },
+          HOLD + 0.3,
+        )
+        .to(
           ".pr-slide-2",
           { yPercent: 0, duration: 0.13, ease: "power2.inOut" },
           HOLD + 0.3,
+        )
+        .fromTo(
+          ".pr-copy-2",
+          { yPercent: 30 },
+          { yPercent: 0, duration: 0.15, ease: "power2.out" },
+          HOLD + 0.31,
+        )
+        .fromTo(
+          ".pr-scene-2",
+          { yPercent: 12 },
+          { yPercent: 0, duration: 0.16, ease: "power2.out" },
+          HOLD + 0.31,
+        )
+        // Accent sheen sweeps through the frame with the swap.
+        .fromTo(
+          ".pr-wipe",
+          { yPercent: 130, autoAlpha: 1 },
+          { yPercent: -130, duration: 0.17, ease: "power2.inOut" },
+          HOLD + 0.28,
         )
         // Act 3: second swap — outdoor unit out, window unit in.
         .to(
@@ -229,9 +291,42 @@ export default function Capabilities() {
           HOLD + 0.51,
         )
         .to(
+          ".pr-copy-2",
+          { yPercent: -35, duration: 0.13, ease: "power2.in" },
+          HOLD + 0.51,
+        )
+        .to(
+          ".pr-scene-2",
+          { yPercent: 18, duration: 0.13, ease: "power2.inOut" },
+          HOLD + 0.51,
+        )
+        .to(
           ".pr-slide-3",
           { yPercent: 0, duration: 0.13, ease: "power2.inOut" },
           HOLD + 0.51,
+        )
+        .fromTo(
+          ".pr-copy-3",
+          { yPercent: 30 },
+          { yPercent: 0, duration: 0.15, ease: "power2.out" },
+          HOLD + 0.52,
+        )
+        .fromTo(
+          ".pr-scene-3",
+          { yPercent: 12 },
+          { yPercent: 0, duration: 0.16, ease: "power2.out" },
+          HOLD + 0.52,
+        )
+        .fromTo(
+          ".pr-wipe",
+          { yPercent: 130, autoAlpha: 1 },
+          {
+            yPercent: -130,
+            duration: 0.17,
+            ease: "power2.inOut",
+            immediateRender: false,
+          },
+          HOLD + 0.49,
         )
         // Long viewing hold on the window unit, then
         // Act 4: recede into depth while the quality sheet (margin overlap
