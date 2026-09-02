@@ -81,6 +81,10 @@ export default function Capabilities() {
         // appears to relocate as it enters.
         .from(".cap-scene", { autoAlpha: 0, duration: 0.8 }, "-=0.5");
 
+      // The scroll hint only exists when the pin does (class has opacity-0,
+      // so no-JS and reduced-motion users never see it).
+      gsap.set(".cap-scroll-hint", { autoAlpha: 1 });
+
       // The product stage sits BEHIND the sheet during the exit sequence.
       // Applied here (not CSS) so no-JS/reduced-motion keep normal flow.
       gsap.set(".product-reveal", {
@@ -144,30 +148,37 @@ export default function Capabilities() {
       // Master pin, now spanning two acts: the curtain exit revealing the
       // stage, then the slide swap — slide 1 (copy, indoor unit, floor)
       // rides up and out while slide 2 rides up into its place.
+      //
+      // HOLD: dead scroll at the start of the pin (~185svh) so the sheet stays
+      // readable after arriving, instead of splitting apart on the first
+      // scroll tick. Every act position shifts by HOLD; the pin distance
+      // grows by the matching 180svh (620% → 800%) so pacing is unchanged.
+      const HOLD = 0.3;
       gsap
         .timeline({
           scrollTrigger: {
             trigger: section,
             start: "top top",
-            end: "+=620%",
+            end: "+=800%",
             pin: true,
             scrub: 0.6,
             anticipatePin: 1,
             invalidateOnRefresh: true,
             onUpdate: (self) => {
-              const shouldShow = self.progress > 0.09;
+              // Thresholds are timeline-time / total duration (1.3).
+              const shouldShow = self.progress > 0.3;
               if (shouldShow !== revealShown) {
                 revealShown = shouldShow;
                 if (shouldShow) revealTl.play();
                 else revealTl.reverse();
               }
-              const showSlide2 = self.progress > 0.36;
+              const showSlide2 = self.progress > 0.51;
               if (showSlide2 !== slide2Shown) {
                 slide2Shown = showSlide2;
                 if (showSlide2) slide2Tl.play();
                 else slide2Tl.reverse();
               }
-              const showSlide3 = self.progress > 0.58;
+              const showSlide3 = self.progress > 0.68;
               if (showSlide3 !== slide3Shown) {
                 slide3Shown = showSlide3;
                 if (showSlide3) slide3Tl.play();
@@ -176,47 +187,59 @@ export default function Capabilities() {
             },
           },
         })
+        // During the hold: the progress line fills 1:1 with scroll and both
+        // columns drift up at slightly different rates, so every scroll tick
+        // gets visible feedback while the sheet stays put.
+        .fromTo(
+          ".cap-scroll-hint-fill",
+          { scaleY: 0 },
+          { scaleY: 1, duration: HOLD, ease: "none" },
+          0,
+        )
+        .to(".cap-left", { y: -12, duration: HOLD, ease: "none" }, 0)
+        .to(".cap-scene-exit", { y: -22, duration: HOLD, ease: "none" }, 0)
+        .to(".cap-scroll-hint", { autoAlpha: 0, duration: 0.04 }, HOLD)
         // Act 1: split the columns, fade the sheet.
         .to(
           ".cap-left",
           { xPercent: -70, autoAlpha: 0, duration: 0.1, ease: "power2.in" },
-          0,
+          HOLD,
         )
         .to(
           ".cap-scene-exit",
           { xPercent: 70, autoAlpha: 0, duration: 0.1, ease: "power2.in" },
-          0,
+          HOLD,
         )
-        .to(".cap-sheet", { autoAlpha: 0, duration: 0.07 }, 0.07)
+        .to(".cap-sheet", { autoAlpha: 0, duration: 0.07 }, HOLD + 0.07)
         // Act 2: first swap — indoor unit out, outdoor unit in.
         .to(
           ".pr-slide-1",
           { yPercent: -110, duration: 0.13, ease: "power2.inOut" },
-          0.3,
+          HOLD + 0.3,
         )
         .to(
           ".pr-slide-2",
           { yPercent: 0, duration: 0.13, ease: "power2.inOut" },
-          0.3,
+          HOLD + 0.3,
         )
         // Act 3: second swap — outdoor unit out, window unit in.
         .to(
           ".pr-slide-2",
           { yPercent: -110, duration: 0.13, ease: "power2.inOut" },
-          0.51,
+          HOLD + 0.51,
         )
         .to(
           ".pr-slide-3",
           { yPercent: 0, duration: 0.13, ease: "power2.inOut" },
-          0.51,
+          HOLD + 0.51,
         )
-        // Long viewing hold on the window unit (~0.64 → 0.85), then
+        // Long viewing hold on the window unit, then
         // Act 4: the stage zooms out into depth while the quality sheet
         // (margin overlap below) slides up over it.
         .to(
           ".reveal-inner",
           { scale: 0.9, duration: 0.1, ease: "power2.in" },
-          0.85,
+          HOLD + 0.85,
         )
         .to({}, { duration: 0.05 });
 
@@ -321,6 +344,17 @@ export default function Capabilities() {
               </p>
             </div>
             </div>
+          </div>
+
+          {/* Scroll-progress hint: the accent line fills during the HOLD
+              dead-scroll, then fades as the split begins. GSAP-driven. */}
+          <div className="cap-scroll-hint pointer-events-none absolute bottom-4 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1.5 opacity-0">
+            <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
+              Scroll
+            </span>
+            <span className="relative h-8 w-px overflow-hidden rounded-full bg-border">
+              <span className="cap-scroll-hint-fill absolute inset-0 origin-top bg-accent" />
+            </span>
           </div>
         </div>
       </div>

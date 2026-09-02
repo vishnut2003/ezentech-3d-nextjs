@@ -33,6 +33,9 @@ export default function Cta() {
       if (reducedMotion) return;
 
       // Under-reveal parallax: content lags the scroll while entering.
+      // One-way only — `once` kills the trigger the first time the section
+      // settles, so scrolling back up never reverses the shift (reversed, the
+      // copy rides along with the viewport instead of resting in the section).
       gsap.fromTo(
         ".cta-inner",
         { yPercent: -35 },
@@ -45,6 +48,10 @@ export default function Cta() {
             end: "top top",
             scrub: 0.4,
             invalidateOnRefresh: true,
+            once: true,
+            // The scrubbed tween lags (0.4s); pin the exact rest position
+            // before the kill so it can't freeze a few percent short.
+            onLeave: () => gsap.set(".cta-inner", { yPercent: 0 }),
           },
         },
       );
