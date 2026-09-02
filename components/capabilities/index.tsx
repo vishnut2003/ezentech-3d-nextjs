@@ -244,7 +244,7 @@ export default function Capabilities() {
           className="absolute inset-x-0 top-0 h-16 bg-[#05080f]"
         />
         <div className="cap-bg relative flex flex-1 items-center rounded-t-[3rem] shadow-[0_-24px_80px_rgba(3,8,20,0.45)]">
-          <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-16 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:px-8 lg:py-24">
+          <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-16 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:px-8 lg:py-24 short:lg:py-10">
             <div className="cap-left">
               <div className="cap-heading">
                 <p className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
@@ -266,7 +266,7 @@ export default function Capabilities() {
                 </p>
               </div>
 
-              <div className="mt-8 grid gap-x-6 gap-y-4 sm:grid-cols-2">
+              <div className="mt-8 grid gap-x-6 gap-y-4 sm:grid-cols-2 short:lg:mt-6">
                 {capabilities.map((capability, i) => (
                   <div
                     key={capability.title}
@@ -287,7 +287,7 @@ export default function Capabilities() {
                 ))}
               </div>
 
-              <div className="cap-card mt-9 flex flex-wrap items-center gap-x-6 gap-y-4">
+              <div className="cap-card mt-9 flex flex-wrap items-center gap-x-6 gap-y-4 short:lg:mt-6">
                 <Link
                   href="/services"
                   className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-surface transition-opacity hover:opacity-90"
@@ -304,7 +304,7 @@ export default function Capabilities() {
             {/* Exit wrapper: the split-apart tween owns THIS element, while the
                 entrance fade owns .cap-scene inside — one owner per property. */}
             <div className="cap-scene-exit">
-              <div className="cap-scene relative h-105 overflow-hidden rounded-4xl border border-border bg-surface lg:h-130">
+              <div className="cap-scene relative h-105 overflow-hidden rounded-4xl border border-border bg-surface lg:h-130 short:lg:h-[min(32.5rem,calc(100svh-8.5rem))]">
               {/* Engineering-grid stage + soft navy glow behind the model */}
               <div aria-hidden="true" className="stage-grid absolute inset-0" />
               <div

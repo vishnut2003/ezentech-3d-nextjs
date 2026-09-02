@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Short-laptop viewports (1366×768 / 1280×650 with browser chrome) */
+@custom-variant short (@media (max-height: 45rem));
+
 /* Light, engineered palette — clean white base with the Ezentech navy accent */
 :root {
   --background: #ffffff;

@@ -41,79 +41,88 @@ export default function Hero() {
       const copy = copyRef.current;
       if (!section || !box || !copy) return;
 
-      // Uniform cover scale + centre delta, measured fresh on every refresh
-      // (invalidateOnRefresh reverts the tween first, so rects are natural).
-      const coverScale = () => {
-        const s = section.getBoundingClientRect();
-        const b = box.getBoundingClientRect();
-        return Math.max(s.width / b.width, s.height / b.height) * 1.02;
-      };
-      const dx = () => {
-        const s = section.getBoundingClientRect();
-        const b = box.getBoundingClientRect();
-        return s.left + s.width / 2 - (b.left + b.width / 2);
-      };
-      const dy = () => {
-        const s = section.getBoundingClientRect();
-        const b = box.getBoundingClientRect();
-        return s.top + s.height / 2 - (b.top + b.height / 2);
-      };
+      // Pin only at lg (64rem = Tailwind's lg) — below that the hero flows
+      // naturally and #capabilities keeps its normal margin, same as the
+      // reduced-motion path. matchMedia reverts everything on breakpoint change.
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 64rem)", () => {
+        // Uniform cover scale + centre delta, measured fresh on every refresh
+        // (invalidateOnRefresh reverts the tween first, so rects are natural).
+        const coverScale = () => {
+          const s = section.getBoundingClientRect();
+          const b = box.getBoundingClientRect();
+          return Math.max(s.width / b.width, s.height / b.height) * 1.02;
+        };
+        const dx = () => {
+          const s = section.getBoundingClientRect();
+          const b = box.getBoundingClientRect();
+          return s.left + s.width / 2 - (b.left + b.width / 2);
+        };
+        const dy = () => {
+          const s = section.getBoundingClientRect();
+          const b = box.getBoundingClientRect();
+          return s.top + s.height / 2 - (b.top + b.height / 2);
+        };
 
-      // Timing: expansion completes at exactly 55% of the 200% pin — the same
-      // moment the overlap window (last 90/200) begins. Section arrival and
-      // blur start together, right as the video reaches fullscreen.
-      const OVERLAP_START = 0.55;
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top top",
-          end: "+=200%",
-          pin: true,
-          scrub: 0.6,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const o = Math.max(
-              0,
-              (self.progress - OVERLAP_START) / (1 - OVERLAP_START),
-            );
-            // Filter fully removed at rest — even blur(0px) rasterizes the
-            // video layer and softens it everywhere.
-            box.style.filter =
-              o > 0.001
-                ? `blur(${(o * 26).toFixed(1)}px) brightness(${(1 - 0.35 * o).toFixed(3)})`
-                : "";
+        // Timing: expansion completes at exactly 55% of the 200% pin — the same
+        // moment the overlap window (last 90/200) begins. Section arrival and
+        // blur start together, right as the video reaches fullscreen.
+        const OVERLAP_START = 0.55;
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "+=200%",
+            pin: true,
+            scrub: 0.6,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            onUpdate: (self) => {
+              const o = Math.max(
+                0,
+                (self.progress - OVERLAP_START) / (1 - OVERLAP_START),
+              );
+              // Filter fully removed at rest — even blur(0px) rasterizes the
+              // video layer and softens it everywhere.
+              box.style.filter =
+                o > 0.001
+                  ? `blur(${(o * 26).toFixed(1)}px) brightness(${(1 - 0.35 * o).toFixed(3)})`
+                  : "";
+            },
           },
-        },
+        });
+
+        tl.to(copy, { x: -90, autoAlpha: 0, duration: 0.2, ease: "power1.in" }, 0)
+          .to(
+            box,
+            {
+              x: dx,
+              y: dy,
+              scale: coverScale,
+              borderRadius: 0,
+              borderColor: "rgba(255,255,255,0)",
+              boxShadow: "0 0 0 rgba(0,0,0,0)",
+              duration: 0.5,
+              ease: "power2.inOut",
+            },
+            0.05,
+          )
+          // Full-bleed exactly at 0.55 of the timeline; the overlap + blur
+          // phase fills the remainder.
+          .to({}, { duration: 0.45 });
+
+        // The next section rides up OVER the pinned full-bleed video during the
+        // last 90svh of the pin. Applied AFTER the pin exists, followed by a
+        // synchronous refresh, so margin + spacer land in the same tick —
+        // otherwise the section flashes over the hero for a frame on reload.
+        // (Set via GSAP, not CSS, so no-JS/reduced-motion keep normal flow.)
+        gsap.set("#capabilities", { marginTop: "-90svh" });
+        ScrollTrigger.refresh();
+
+        return () => {
+          box.style.filter = ""; // onUpdate sets an inline filter; clear on teardown
+        };
       });
-
-      tl.to(copy, { x: -90, autoAlpha: 0, duration: 0.2, ease: "power1.in" }, 0)
-        .to(
-          box,
-          {
-            x: dx,
-            y: dy,
-            scale: coverScale,
-            borderRadius: 0,
-            borderColor: "rgba(255,255,255,0)",
-            boxShadow: "0 0 0 rgba(0,0,0,0)",
-            duration: 0.5,
-            ease: "power2.inOut",
-          },
-          0.05,
-        )
-        // Full-bleed exactly at 0.55 of the timeline; the overlap + blur
-        // phase fills the remainder.
-        .to({}, { duration: 0.45 });
-
-      // The next section rides up OVER the pinned full-bleed video during the
-      // last 90svh of the pin. Applied AFTER the pin exists, followed by a
-      // synchronous refresh, so margin + spacer land in the same tick —
-      // otherwise the section flashes over the hero for a frame on reload.
-      // (Set via GSAP, not CSS, so no-JS/reduced-motion keep normal flow.)
-      gsap.set("#capabilities", { marginTop: "-90svh" });
-      ScrollTrigger.refresh();
-
     },
     { scope: sectionRef, dependencies: [reducedMotion], revertOnUpdate: true },
   );
@@ -126,17 +135,17 @@ export default function Hero() {
   return (
     <section
       ref={sectionRef}
-      className="hero-bg relative -mt-16 h-svh overflow-hidden"
+      className="hero-bg relative -mt-16 overflow-hidden lg:h-svh"
       aria-label="Ezentech manufacturing hero"
     >
       <div className="hero-grid-fine absolute inset-0" aria-hidden="true" />
       <div className="hero-floor" aria-hidden="true" />
 
-      <div className="absolute inset-0 z-10 flex items-end pb-14 lg:pb-20">
+      <div className="relative z-10 flex min-h-svh items-end pb-14 pt-24 lg:absolute lg:inset-0 lg:min-h-0 lg:pt-0 lg:pb-20">
         <div className="mx-auto flex w-full max-w-7xl flex-col justify-end gap-10 px-6 lg:flex-row lg:items-end lg:justify-between lg:px-8">
           {/* Framed video panel, floating upper-right of the copy */}
           <div
-            className={`relative z-20 order-first w-full lg:order-last lg:mb-40 lg:w-[55%] ${reveal("delay-150")}`}
+            className={`relative z-20 order-first w-full lg:order-last lg:mb-40 lg:w-[55%] short:lg:mb-14 short:lg:w-[min(55%,calc((100svh-13.5rem)*16/9))] ${reveal("delay-150")}`}
           >
             <div
               ref={boxRef}
