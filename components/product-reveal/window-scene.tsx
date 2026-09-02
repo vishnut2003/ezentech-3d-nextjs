@@ -185,6 +185,9 @@ export default function WindowScene({ compact }: WindowSceneProps) {
       camera={{ position: [0, 0.35, 7.5], fov: 35 }}
       dpr={[1, 2]}
       gl={{ antialias: true, alpha: true }}
+      // No scroll re-measure — see scene.tsx: prevents the exit scale on
+      // .reveal-inner from resizing the GL viewport mid-tween.
+      resize={{ scroll: false }}
     >
       <ambientLight intensity={0.35} />
       <directionalLight position={[4.2, 6.5, 5.5]} intensity={1.5} />

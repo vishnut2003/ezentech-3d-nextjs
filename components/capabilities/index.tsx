@@ -234,10 +234,17 @@ export default function Capabilities() {
           HOLD + 0.51,
         )
         // Long viewing hold on the window unit, then
-        // Act 4: the stage zooms out into depth while the quality sheet
-        // (margin overlap below) slides up over it.
+        // Act 4: recede into depth while the quality sheet (margin overlap
+        // below) slides up over it. The stage only DIMS — scaling it would
+        // shift the model toward the viewport centre (any ancestor scale
+        // moves the canvas); the zoom-out lives on the copy alone.
         .to(
           ".reveal-inner",
+          { autoAlpha: 0.45, duration: 0.1, ease: "power2.in" },
+          HOLD + 0.85,
+        )
+        .to(
+          ".pr-copy-3",
           { scale: 0.9, duration: 0.1, ease: "power2.in" },
           HOLD + 0.85,
         )

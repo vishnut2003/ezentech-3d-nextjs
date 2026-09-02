@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
@@ -7,6 +8,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
+
+// Decorative 3D loads lazily; it must never block the page.
+const CtaWireframes = dynamic(() => import("./wireframes"), { ssr: false });
 
 /**
  * Final RFQ close on the midnight stage. Transition: under-reveal parallax —
@@ -84,6 +88,7 @@ export default function Cta() {
     >
       <div className="hero-grid-fine absolute inset-0" aria-hidden="true" />
       <div className="hero-floor" aria-hidden="true" />
+      <CtaWireframes reducedMotion={reducedMotion} />
 
       <div className="cta-inner relative z-10 mx-auto flex min-h-svh w-full max-w-7xl flex-col items-center justify-center px-6 py-24 text-center lg:px-8">
         <div className="cta-stagger flex flex-col items-center">

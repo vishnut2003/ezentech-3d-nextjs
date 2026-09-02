@@ -37,6 +37,12 @@ export default function ProductScene({ compact }: ProductSceneProps) {
       camera={{ position: [0, 0.35, 7.5], fov: 35 }}
       dpr={[1, 2]}
       gl={{ antialias: true, alpha: true }}
+      // No scroll re-measure: the exit tween CSS-scales .reveal-inner while
+      // scrolling, and a scroll-triggered getBoundingClientRect would resize
+      // the GL viewport to the transformed rect — the model would double-
+      // shrink and appear to relocate. ResizeObserver still handles real
+      // window resizes (transforms never fire it).
+      resize={{ scroll: false }}
     >
       <ambientLight intensity={0.35} />
       <directionalLight position={[4.2, 6.5, 5.5]} intensity={1.5} />
