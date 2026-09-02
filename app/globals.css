@@ -51,6 +51,15 @@ html.lenis body {
   overflow: hidden;
 }
 
+/* Faint drafting grid for the light footer */
+.footer-grid-light {
+  background-image:
+    linear-gradient(to right, rgba(20, 24, 31, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(20, 24, 31, 0.04) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(80% 85% at 50% 15%, black 30%, transparent 85%);
+}
+
 /* Hero backdrop: midnight-navy studio scene (video look, rebuilt in CSS) */
 .hero-bg {
   background:
