@@ -58,6 +58,35 @@ export default function Quality() {
           { y: 28, autoAlpha: 0, duration: 0.55, stagger: 0.07 },
           "-=0.35",
         );
+
+      // Viewing hold: pin the sheet for ~100svh of dead scroll after it
+      // arrives, the progress line filling 1:1 with scroll and the content
+      // drifting up a touch — same affordance as the capabilities hold.
+      // Pins .quality-pin (not the section) so the -100svh overlap margin
+      // the capabilities pin puts on #quality stays out of the pin math.
+      // (The hint's class has opacity-0, so no-JS and reduced-motion users
+      // never see it.)
+      gsap.set(".quality-scroll-hint", { autoAlpha: 1 });
+      gsap
+        .timeline({
+          scrollTrigger: {
+            trigger: section,
+            pin: ".quality-pin",
+            start: "top top",
+            end: "+=100%",
+            scrub: 0.4,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+          },
+        })
+        .fromTo(
+          ".quality-scroll-hint-fill",
+          { scaleY: 0 },
+          { scaleY: 1, duration: 0.9, ease: "none" },
+          0,
+        )
+        .to(".quality-inner", { y: -14, duration: 0.9, ease: "none" }, 0)
+        .to(".quality-scroll-hint", { autoAlpha: 0, duration: 0.1 }, 0.9);
     },
     { scope: sectionRef, dependencies: [reducedMotion], revertOnUpdate: true },
   );
@@ -69,6 +98,9 @@ export default function Quality() {
       className="relative z-30"
       aria-label="Quality, certifications and trust"
     >
+      {/* Pinned as one unit for the viewing hold — backdrop included, so the
+          rounded-corner notches never expose the white spacer mid-pin. */}
+      <div className="quality-pin relative">
       {/* Dark backdrop behind the rounded top: the corner notches would
           otherwise expose the white pin-spacer area after release. */}
       <div
@@ -76,7 +108,7 @@ export default function Quality() {
         className="absolute inset-x-0 top-0 h-16 bg-[#05080f]"
       />
       <div className="cap-bg relative flex min-h-svh flex-col justify-center rounded-t-[3rem] shadow-[0_-24px_80px_rgba(3,8,20,0.45)]">
-        <div className="mx-auto w-full max-w-7xl px-6 py-12 lg:px-8">
+        <div className="quality-inner mx-auto w-full max-w-7xl px-6 py-12 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div className="quality-heading">
               <p className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
@@ -183,6 +215,18 @@ export default function Quality() {
             </Link>
           </div>
         </div>
+
+        {/* Scroll-progress hint: the accent line fills during the pinned
+            hold, then fades as the pin releases. GSAP-driven. */}
+        <div className="quality-scroll-hint pointer-events-none absolute bottom-4 left-1/2 flex -translate-x-1/2 flex-col items-center gap-1.5 opacity-0">
+          <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-muted">
+            Scroll
+          </span>
+          <span className="relative h-8 w-px overflow-hidden rounded-full bg-border">
+            <span className="quality-scroll-hint-fill absolute inset-0 origin-top bg-accent" />
+          </span>
+        </div>
+      </div>
       </div>
     </section>
   );
