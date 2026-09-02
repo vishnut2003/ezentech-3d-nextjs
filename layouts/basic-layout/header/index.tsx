@@ -67,13 +67,13 @@ export default function Header() {
                 : "border-white/40 text-white hover:border-white"
             }`}
           >
-            our capabilities
+            Our Capabilities
           </Link>
           <Link
             href="/contact"
             className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-surface transition-opacity hover:opacity-90"
           >
-            get a quote
+            Get a Quote
           </Link>
         </div>
       </div>

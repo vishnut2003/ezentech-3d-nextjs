@@ -178,7 +178,7 @@ export default function Quality() {
               href="/about/quality"
               className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-bold text-accent transition-opacity hover:opacity-90"
             >
-              our quality process
+              Our Quality Process
               <span aria-hidden="true">→</span>
             </Link>
           </div>

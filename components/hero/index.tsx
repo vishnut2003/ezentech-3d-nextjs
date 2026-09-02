@@ -174,13 +174,13 @@ export default function Hero() {
                 href="/contact"
                 className="rounded-full bg-white px-8 py-3.5 text-base font-bold text-foreground transition-opacity hover:opacity-90"
               >
-                get a quote
+                Get a Quote
               </Link>
               <Link
                 href="/services"
                 className="rounded-full border border-white/40 px-8 py-3.5 text-base font-bold text-white transition-colors hover:border-white"
               >
-                our capabilities
+                Our Capabilities
               </Link>
             </div>
           </div>

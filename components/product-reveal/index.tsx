@@ -64,7 +64,7 @@ export default function ProductReveal() {
                   href="/products"
                   className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-foreground transition-opacity hover:opacity-90"
                 >
-                  view products
+                  View Products
                   <span aria-hidden="true">→</span>
                 </Link>
               </div>
@@ -99,7 +99,7 @@ export default function ProductReveal() {
                   href="/products/idu-odu"
                   className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-foreground transition-opacity hover:opacity-90"
                 >
-                  explore IDU / ODU
+                  Explore IDU / ODU
                   <span aria-hidden="true">→</span>
                 </Link>
               </div>
@@ -135,7 +135,7 @@ export default function ProductReveal() {
                   href="/products"
                   className="inline-flex items-center gap-2 rounded-full bg-white px-7 py-3 text-sm font-bold text-foreground transition-opacity hover:opacity-90"
                 >
-                  see the full range
+                  See the Full Range
                   <span aria-hidden="true">→</span>
                 </Link>
               </div>

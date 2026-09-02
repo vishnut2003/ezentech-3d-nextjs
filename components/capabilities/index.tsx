@@ -292,7 +292,7 @@ export default function Capabilities() {
                   href="/services"
                   className="inline-flex items-center gap-2 rounded-full bg-accent px-6 py-2.5 text-sm font-medium text-surface transition-opacity hover:opacity-90"
                 >
-                  explore capabilities
+                  Explore Capabilities
                   <span aria-hidden="true">→</span>
                 </Link>
                 <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
