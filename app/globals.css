@@ -132,3 +132,74 @@ html.lenis body {
     animation: none;
   }
 }
+
+/* Keep anchored targets clear of the sticky model selector on inner pages */
+html {
+  scroll-padding-top: 7rem;
+}
+
+/* Horizontal scroll strips that must not show a scrollbar */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* CSS-only entrance for inner-page heroes: paints on the first frame,
+   no hydration gate. */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.reveal-up {
+  animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.reveal-delay-1 {
+  animation-delay: 0.08s;
+}
+.reveal-delay-2 {
+  animation-delay: 0.16s;
+}
+.reveal-delay-3 {
+  animation-delay: 0.24s;
+}
+.reveal-delay-4 {
+  animation-delay: 0.32s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal-up {
+    animation: none;
+  }
+}
+
+/* Technical specifications: the sticky selector writes the active filters
+   onto #spec-models; CSS does the hiding so every model stays in the HTML
+   (no JS, crawlers, print) and nothing is duplicated into the client. */
+#spec-models[data-filter-type="split"] [data-type="window"],
+#spec-models[data-filter-type="window"] [data-type="split"],
+#spec-models[data-filter-stars="3"] [data-stars="5"],
+#spec-models[data-filter-stars="5"] [data-stars="3"] {
+  display: none;
+}
+
+@media print {
+  #spec-models [data-type] {
+    display: revert !important;
+  }
+  .print-hidden {
+    display: none !important;
+  }
+  #spec-models article {
+    break-inside: avoid;
+  }
+  #spec-models table {
+    font-size: 11px;
+  }
+}

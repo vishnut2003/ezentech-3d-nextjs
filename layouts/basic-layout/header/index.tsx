@@ -60,14 +60,14 @@ export default function Header() {
 
         <div className="flex items-center gap-3">
           <Link
-            href="/services"
+            href="/products/technical-specifications"
             className={`hidden rounded-full border px-5 py-2.5 text-sm font-medium transition-colors sm:block ${
               solid
                 ? "border-foreground/25 text-foreground hover:border-foreground"
                 : "border-white/40 text-white hover:border-white"
             }`}
           >
-            Our Capabilities
+            Technical Specs
           </Link>
           <Link
             href="/contact"

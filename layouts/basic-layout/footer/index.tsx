@@ -27,6 +27,10 @@ const footerColumns = [
       { label: "Window Air Conditioners", href: "/products/window-ac" },
       { label: "Inverter AC Range", href: "/products/inverter-ac" },
       { label: "IDU / ODU Units", href: "/products/idu-odu" },
+      {
+        label: "Technical Specifications",
+        href: "/products/technical-specifications",
+      },
     ],
   },
 ];
