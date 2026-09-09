@@ -25,12 +25,17 @@ export default function Hero() {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
-    setReady(true);
+    // Arm the CSS entrance on the next frame, after the hidden state has
+    // painted, so the transition always runs from its start values.
+    const frame = requestAnimationFrame(() => setReady(true));
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
     const apply = () => setReducedMotion(mq.matches);
     apply();
     mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
+    return () => {
+      cancelAnimationFrame(frame);
+      mq.removeEventListener("change", apply);
+    };
   }, []);
 
   useGSAP(
