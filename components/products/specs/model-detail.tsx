@@ -26,7 +26,7 @@ export default function ModelDetail({ model }: { model: SpecModel }) {
       data-type={model.type}
       data-stars={model.stars}
       aria-labelledby={`${model.slug}-title`}
-      className="scroll-mt-24 border-t border-border py-12 lg:py-16"
+      className="scroll-mt-24 border-t border-border py-12 first:border-t-0 lg:py-16"
     >
       <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12">
         {/* Identity, renders, headline metrics — sticks while the table scrolls */}

@@ -641,29 +641,6 @@ export function toSpecGroups(m: SpecModel): SpecGroup[] {
   return groups;
 }
 
-/** Rows for the at-a-glance comparison grid (one column per model). */
-export interface GlanceRow {
-  key: string;
-  label: string;
-  unit?: string;
-  pick: (m: SpecModel) => string;
-}
-
-export const glanceRows: readonly GlanceRow[] = [
-  { key: "type", label: "Type", pick: (m) => (m.type === "split" ? "Split" : "Window") },
-  { key: "stars", label: "BEE star rating", pick: (m) => `${m.stars}-Star` },
-  { key: "capacity", label: "Cooling capacity", unit: "W", pick: (m) => String(m.sheet.general.coolingCapacityW) },
-  { key: "iseer", label: "Rated ISEER", pick: (m) => m.sheet.general.iseer.toFixed(2) },
-  { key: "chassis", label: "Chassis", pick: (m) => m.sheet.general.chassis },
-  { key: "airflow", label: "Indoor air flow", unit: "m³/h", pick: (m) => String(m.sheet.indoorUnit.airflowM3h) },
-  { key: "idu", label: "Indoor unit (W×D×H)", unit: "mm", pick: (m) => m.sheet.indoorUnit.unitDims },
-  { key: "odu", label: "Outdoor / condenser unit (W×H×D)", unit: "mm", pick: (m) => m.sheet.condenser.unitDims },
-  { key: "compressor", label: "Compressor", pick: (m) => (m.sheet.compressor ? `${m.sheet.compressor.type} · ${m.sheet.compressor.brand}` : "—") },
-  { key: "expansion", label: "Expansion", pick: (m) => m.sheet.condenser.expansionType },
-  { key: "pipes", label: "Liquid / gas pipe", unit: "mm", pick: (m) => `${m.sheet.refrigerantPipe.liquid} / ${m.sheet.refrigerantPipe.gas}` },
-  { key: "refrigerant", label: "Refrigerant", pick: (m) => m.sheet.condenser.refrigerant },
-];
-
 export function modelImageList(m: SpecModel): { src: string; alt: string }[] {
   if ("window" in m.images) {
     return [{ src: m.images.window, alt: `${m.name} — window unit` }];

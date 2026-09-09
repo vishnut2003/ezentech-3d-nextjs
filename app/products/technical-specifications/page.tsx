@@ -3,13 +3,10 @@ import Link from "next/link";
 import BasicLayout from "@/layouts/basic-layout";
 import Cta from "@/components/cta";
 import JsonLd from "@/components/seo/json-ld";
-import Reveal from "@/components/motion/reveal";
 import Container from "@/components/ui/container";
 import PageHero from "@/components/ui/page-hero";
-import SectionHeading from "@/components/ui/section-heading";
 import SpecIntro from "@/components/products/specs/spec-intro";
 import ModelSelector from "@/components/products/specs/model-selector";
-import ComparisonGrid from "@/components/products/specs/comparison-grid";
 import ModelDetail from "@/components/products/specs/model-detail";
 import SourceNote from "@/components/products/specs/source-note";
 import { specModels } from "@/data/products/specs";
@@ -63,7 +60,7 @@ export default function TechnicalSpecificationsPage() {
         eyebrow="Products · Technical specifications"
         title="Every parameter,"
         accent="on the page."
-        lede="Manufacturer specification sheets for Ezentech's inverter split and window range — 12K to 22K, 3-star and 5-star, all on R32. Compare headline figures, then open any model for the full coil, fan, compressor and dimension data."
+        lede="Manufacturer specification sheets for Ezentech's inverter split and window range — 12K to 22K, 3-star and 5-star, all on R32. Filter by type or star rating, then jump to any model for the full coil, fan, compressor and dimension data."
         actions={
           <>
             <Link
@@ -76,7 +73,7 @@ export default function TechnicalSpecificationsPage() {
               href="#spec-models"
               className="rounded-full border border-foreground/25 px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:border-foreground"
             >
-              Compare the range
+              Browse the models
             </a>
           </>
         }
@@ -92,24 +89,10 @@ export default function TechnicalSpecificationsPage() {
         data-filter-stars="all"
         aria-labelledby="spec-models-heading"
       >
-        <Container className="pt-14 lg:pt-20">
-          <Reveal>
-            <div data-reveal>
-              <SectionHeading
-                id="spec-models-heading"
-                eyebrow="At a glance"
-                title="Eight models,"
-                accent="side by side."
-                lede="Headline figures from every sheet in one grid. Scroll sideways on smaller screens; the first column stays put."
-              />
-            </div>
-            <div className="mt-8">
-              <ComparisonGrid />
-            </div>
-          </Reveal>
-        </Container>
-
-        <Container className="mt-12 lg:mt-16">
+        <h2 id="spec-models-heading" className="sr-only">
+          Model specifications
+        </h2>
+        <Container>
           {specModels.map((model) => (
             <ModelDetail key={model.slug} model={model} />
           ))}
