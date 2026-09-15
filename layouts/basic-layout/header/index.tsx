@@ -3,19 +3,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const navLinks = [
-  { label: "About", href: "/about" },
-  { label: "Services", href: "/services" },
-  { label: "Products", href: "/products" },
-  { label: "Insights", href: "/insights" },
-  { label: "Contact", href: "/contact" },
-];
+import { PRIMARY_ACTIONS } from "@/lib/nav";
+import MegaMenu from "./mega-menu";
+import MobileNav from "./mobile-nav";
 
 export default function Header() {
   // Light-on-dark treatment over the homepage hero; solid on inner pages,
   // where white backgrounds would make it invisible.
-  const isHome = usePathname() === "/";
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const solid = !isHome;
 
   return (
@@ -42,39 +38,26 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`text-sm lowercase tracking-wide transition-colors ${
-                solid
-                  ? "text-muted hover:text-foreground"
-                  : "text-white/85 hover:text-white"
-              }`}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
+        <MegaMenu solid={solid} />
 
         <div className="flex items-center gap-3">
           <Link
-            href="/products/technical-specifications"
+            href={PRIMARY_ACTIONS.specs.href}
             className={`hidden rounded-full border px-5 py-2.5 text-sm font-medium transition-colors sm:block ${
               solid
                 ? "border-foreground/25 text-foreground hover:border-foreground"
                 : "border-white/40 text-white hover:border-white"
             }`}
           >
-            Technical Specs
+            {PRIMARY_ACTIONS.specs.label}
           </Link>
           <Link
-            href="/contact"
+            href={PRIMARY_ACTIONS.quote.href}
             className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-surface transition-opacity hover:opacity-90"
           >
-            Get a Quote
+            {PRIMARY_ACTIONS.quote.label}
           </Link>
+          <MobileNav solid={solid} />
         </div>
       </div>
     </header>
