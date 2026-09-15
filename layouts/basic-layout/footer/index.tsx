@@ -1,36 +1,34 @@
 import Image from "next/image";
 import Link from "next/link";
+import { getSection } from "@/lib/nav";
 
+const about = getSection("about");
+const services = getSection("services");
+const products = getSection("products");
+const insights = getSection("insights");
+
+/** Columns derive from lib/nav.ts so the footer can never drift from the sitemap. */
 const footerColumns = [
   {
     heading: "Company",
     links: [
-      { label: "Get to Know Ezentech", href: "/about" },
-      { label: "Manufacturing & Infrastructure", href: "/about/manufacturing" },
-      { label: "Quality & Certifications", href: "/about/quality" },
-      { label: "Leadership & Journey", href: "/about/leadership" },
+      { label: about.label, href: about.href },
+      ...about.children.map((c) => ({ label: c.short ?? c.label, href: c.href })),
+      ...insights.children.map((c) => ({ label: c.short ?? c.label, href: c.href })),
     ],
   },
   {
     heading: "Capabilities",
     links: [
-      { label: "OEM / ODM Manufacturing", href: "/services/oem-odm" },
-      { label: "Heat Exchanger Coils", href: "/services/heat-exchanger-coils" },
-      { label: "Sheet Metal Fabrication", href: "/services/sheet-metal" },
-      { label: "Testing & Quality Assurance", href: "/services/testing" },
+      { label: services.label, href: services.href },
+      ...services.children.map((c) => ({ label: c.short ?? c.label, href: c.href })),
     ],
   },
   {
     heading: "Products",
     links: [
-      { label: "Split Air Conditioners", href: "/products/split-ac" },
-      { label: "Window Air Conditioners", href: "/products/window-ac" },
-      { label: "Inverter AC Range", href: "/products/inverter-ac" },
-      { label: "IDU / ODU Units", href: "/products/idu-odu" },
-      {
-        label: "Technical Specifications",
-        href: "/products/technical-specifications",
-      },
+      { label: products.label, href: products.href },
+      ...products.children.map((c) => ({ label: c.short ?? c.label, href: c.href })),
     ],
   },
 ];

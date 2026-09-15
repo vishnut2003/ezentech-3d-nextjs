@@ -18,10 +18,14 @@ export default function Reveal({
   children,
   className,
   as: Tag = "div",
+  id,
+  ariaLabelledBy,
 }: {
   children: React.ReactNode;
   className?: string;
   as?: "div" | "section";
+  id?: string;
+  ariaLabelledBy?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
@@ -46,7 +50,7 @@ export default function Reveal({
   );
 
   return (
-    <Tag ref={ref} className={className}>
+    <Tag ref={ref} className={className} id={id} aria-labelledby={ariaLabelledBy}>
       {children}
     </Tag>
   );

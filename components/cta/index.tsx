@@ -21,6 +21,9 @@ const CtaWireframes = dynamic(() => import("./wireframes"), { ssr: false });
 export default function Cta() {
   const sectionRef = useRef<HTMLElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+  // The wireframe canvas (three.js) only mounts once the close is near the
+  // viewport, so inner pages never pay for it on initial load.
+  const [near, setNear] = useState(false);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -28,6 +31,22 @@ export default function Cta() {
     apply();
     mq.addEventListener("change", apply);
     return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setNear(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "400px 0px" },
+    );
+    io.observe(section);
+    return () => io.disconnect();
   }, []);
 
   useGSAP(
@@ -88,7 +107,7 @@ export default function Cta() {
     >
       <div className="hero-grid-fine absolute inset-0" aria-hidden="true" />
       <div className="hero-floor" aria-hidden="true" />
-      <CtaWireframes reducedMotion={reducedMotion} />
+      {near ? <CtaWireframes reducedMotion={reducedMotion} /> : null}
 
       <div className="cta-inner relative z-10 mx-auto flex min-h-svh w-full max-w-7xl flex-col items-center justify-center px-6 py-24 text-center lg:px-8">
         <div className="cta-stagger flex flex-col items-center">

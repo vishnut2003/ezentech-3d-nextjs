@@ -24,7 +24,11 @@ function property(name: string, value: string | number, unitCode?: string) {
   };
 }
 
-function productLd(m: SpecModel) {
+/**
+ * One model as a schema.org Product. Exported so range pages can list the
+ * same `@id`s instead of creating a second Product entity per model.
+ */
+export function productLd(m: SpecModel) {
   const s = m.sheet;
   const id = absUrl(`${SPECS_PATH}#${m.slug}`);
   return {

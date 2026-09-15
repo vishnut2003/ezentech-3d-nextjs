@@ -22,6 +22,16 @@ export const ORG = {
   },
 } as const;
 
+/**
+ * Public contact channels. Both are unverified today, so they stay
+ * undefined and the contact page renders only the postal address until the
+ * client supplies them.
+ */
+export const CONTACT: { email?: string; phone?: string } = {
+  email: undefined,
+  phone: undefined,
+};
+
 export function absUrl(path: string): string {
   return path.startsWith("http") ? path : `${SITE_URL}${path}`;
 }
