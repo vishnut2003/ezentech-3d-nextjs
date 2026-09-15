@@ -5,11 +5,44 @@ import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { NAV, PRIMARY_ACTIONS } from "@/lib/nav";
 
+const tones = {
+  light: {
+    button: "border-foreground/25 text-foreground hover:border-foreground",
+    panel: "border-border bg-background shadow-[0_24px_80px_rgba(44,56,138,0.08)]",
+    backdrop: "",
+    divide: "divide-border",
+    hairline: "border-border",
+    heading: "text-foreground",
+    active: "text-accent",
+    body: "text-muted",
+    accent: "text-accent",
+    index: "text-accent/70",
+    sub: "border-border bg-surface",
+    primary: "bg-accent text-surface hover:opacity-90",
+    secondary: "border-foreground/25 text-foreground hover:border-foreground",
+  },
+  dark: {
+    button: "border-white/40 text-white hover:border-white",
+    panel: "hero-bg border-white/10 shadow-[0_24px_80px_rgba(0,0,0,0.55)]",
+    backdrop: "hero-grid-fine",
+    divide: "divide-white/10",
+    hairline: "border-white/10",
+    heading: "text-white",
+    active: "text-[#8fb0ff]",
+    body: "text-white/60",
+    accent: "text-[#8fb0ff]",
+    index: "text-[#8fb0ff]/60",
+    sub: "border-white/10 bg-white/[0.04]",
+    primary: "bg-white text-foreground hover:opacity-90",
+    secondary: "border-white/40 text-white hover:border-white",
+  },
+} as const;
+
 /**
  * Disclosure menu for phones and small tablets listing every page: each
- * section expands to its child pages. Top-anchored panel (not a full-screen
- * overlay) so it never fights Lenis; closes on link click, Escape, outside
- * click, or when the viewport grows past `md`.
+ * section expands to its child pages. Dark over the homepage hero, light on
+ * inner pages. Closes on link click, Escape, outside click, or when the
+ * viewport grows past `md`.
  */
 export default function MobileNav({ solid }: { solid: boolean }) {
   const [open, setOpen] = useState(false);
@@ -17,6 +50,7 @@ export default function MobileNav({ solid }: { solid: boolean }) {
   const panelId = useId();
   const pathname = usePathname();
   const close = () => setOpen(false);
+  const t = solid ? tones.light : tones.dark;
 
   useEffect(() => {
     if (!open) return;
@@ -47,11 +81,7 @@ export default function MobileNav({ solid }: { solid: boolean }) {
         aria-controls={panelId}
         aria-label={open ? "Close menu" : "Open menu"}
         onClick={() => setOpen((v) => !v)}
-        className={`flex h-10 w-10 items-center justify-center rounded-full border transition-colors ${
-          solid
-            ? "border-foreground/25 text-foreground hover:border-foreground"
-            : "border-white/40 text-white hover:border-white"
-        }`}
+        className={`flex h-10 w-10 items-center justify-center rounded-full border transition-colors ${t.button}`}
       >
         <svg className="h-4 w-4" viewBox="0 0 16 16" fill="none" aria-hidden="true">
           {open ? (
@@ -66,9 +96,10 @@ export default function MobileNav({ solid }: { solid: boolean }) {
         <nav
           id={panelId}
           aria-label="Main"
-          className="reveal-up absolute inset-x-0 top-16 z-50 max-h-[calc(100svh-4rem)] overflow-y-auto border-b border-border bg-background shadow-[0_24px_80px_rgba(44,56,138,0.08)]"
+          className={`reveal-up absolute inset-x-0 top-16 z-50 max-h-[calc(100svh-4rem)] overflow-y-auto border-b ${t.panel}`}
         >
-          <ul className="divide-y divide-border px-6">
+          {t.backdrop ? <div className={`${t.backdrop} pointer-events-none absolute inset-0`} aria-hidden="true" /> : null}
+          <ul className={`relative divide-y px-6 ${t.divide}`}>
             {NAV.map((section) => {
               const active = isActive(section.href);
               if (section.children.length === 0) {
@@ -79,11 +110,11 @@ export default function MobileNav({ solid }: { solid: boolean }) {
                       aria-current={active ? "page" : undefined}
                       onClick={close}
                       className={`flex items-center justify-between gap-4 py-4 text-base font-medium ${
-                        active ? "text-accent" : "text-foreground"
+                        active ? t.active : t.heading
                       }`}
                     >
                       {section.short ?? section.label}
-                      <span aria-hidden="true" className="text-accent">
+                      <span aria-hidden="true" className={t.accent}>
                         →
                       </span>
                     </Link>
@@ -94,33 +125,31 @@ export default function MobileNav({ solid }: { solid: boolean }) {
                 <li key={section.href}>
                   <details className="group" open={active}>
                     <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 [&::-webkit-details-marker]:hidden">
-                      <span
-                        className={`text-base font-medium ${active ? "text-accent" : "text-foreground"}`}
-                      >
+                      <span className={`text-base font-medium ${active ? t.active : t.heading}`}>
                         {section.short ?? section.label}
                       </span>
                       <span
                         aria-hidden="true"
-                        className="text-lg leading-none text-accent transition-transform group-open:rotate-45"
+                        className={`text-lg leading-none transition-transform group-open:rotate-45 ${t.accent}`}
                       >
                         +
                       </span>
                     </summary>
-                    <ul className="mb-4 overflow-hidden rounded-2xl border border-border bg-surface">
+                    <ul className={`mb-4 overflow-hidden rounded-2xl border ${t.sub}`}>
                       <li>
                         <Link
                           href={section.href}
                           onClick={close}
-                          className="flex items-center justify-between gap-4 px-4 py-3 text-sm font-semibold text-foreground"
+                          className={`flex items-center justify-between gap-4 px-4 py-3 text-sm font-semibold ${t.heading}`}
                         >
                           {section.overviewLabel}
-                          <span aria-hidden="true" className="text-accent">
+                          <span aria-hidden="true" className={t.accent}>
                             →
                           </span>
                         </Link>
                       </li>
                       {section.children.map((child, i) => (
-                        <li key={child.href} className="border-t border-border">
+                        <li key={child.href} className={`border-t ${t.hairline}`}>
                           <Link
                             href={child.href}
                             aria-current={isActive(child.href) ? "page" : undefined}
@@ -129,13 +158,11 @@ export default function MobileNav({ solid }: { solid: boolean }) {
                           >
                             <span
                               aria-hidden="true"
-                              className="font-mono text-[11px] font-medium tracking-wider text-accent/70"
+                              className={`font-mono text-[11px] font-medium tracking-wider ${t.index}`}
                             >
                               {String(i + 1).padStart(2, "0")}
                             </span>
-                            <span
-                              className={isActive(child.href) ? "text-accent" : "text-muted"}
-                            >
+                            <span className={isActive(child.href) ? t.active : t.body}>
                               {child.short ?? child.label}
                             </span>
                           </Link>
@@ -147,18 +174,18 @@ export default function MobileNav({ solid }: { solid: boolean }) {
               );
             })}
           </ul>
-          <div className="flex flex-col gap-2 border-t border-border px-6 py-4">
+          <div className={`relative flex flex-col gap-2 border-t px-6 py-4 ${t.hairline}`}>
             <Link
               href={PRIMARY_ACTIONS.quote.href}
               onClick={close}
-              className="rounded-full bg-accent px-6 py-2.5 text-center text-sm font-medium text-surface transition-opacity hover:opacity-90"
+              className={`rounded-full px-6 py-2.5 text-center text-sm font-medium transition-opacity ${t.primary}`}
             >
               {PRIMARY_ACTIONS.quote.label}
             </Link>
             <Link
               href={PRIMARY_ACTIONS.specs.href}
               onClick={close}
-              className="rounded-full border border-foreground/25 px-6 py-2.5 text-center text-sm font-medium text-foreground transition-colors hover:border-foreground"
+              className={`rounded-full border px-6 py-2.5 text-center text-sm font-medium transition-colors ${t.secondary}`}
             >
               {PRIMARY_ACTIONS.specs.label}
             </Link>

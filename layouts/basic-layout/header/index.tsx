@@ -4,10 +4,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PRIMARY_ACTIONS } from "@/lib/nav";
-import MegaMenu from "./mega-menu";
+import MegaMenu, { type SpotlightArticle } from "./mega-menu";
 import MobileNav from "./mobile-nav";
 
-export default function Header() {
+export default function Header({ latestArticle }: { latestArticle?: SpotlightArticle }) {
   // Light-on-dark treatment over the homepage hero; solid on inner pages,
   // where white backgrounds would make it invisible.
   const pathname = usePathname();
@@ -38,7 +38,7 @@ export default function Header() {
           />
         </Link>
 
-        <MegaMenu solid={solid} />
+        <MegaMenu solid={solid} latestArticle={latestArticle} />
 
         <div className="flex items-center gap-3">
           <Link
