@@ -26,7 +26,9 @@ export default function ModelDetail({ model }: { model: SpecModel }) {
       data-type={model.type}
       data-stars={model.stars}
       aria-labelledby={`${model.slug}-title`}
-      className="scroll-mt-24 border-t border-border py-12 first:border-t-0 lg:py-16"
+      // Clears the sticky selector bar: two rows (~90px) on phones, where
+      // the filter row can still wrap once at 320px; one row less from sm.
+      className="scroll-mt-36 border-t border-border py-12 first:border-t-0 sm:scroll-mt-28 lg:py-16"
     >
       <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12">
         {/* Identity, renders, headline metrics — sticks while the table scrolls */}
@@ -74,7 +76,7 @@ export default function ModelDetail({ model }: { model: SpecModel }) {
                 key={stat.label}
                 className={`flex items-baseline gap-5 py-2 ${i > 0 ? "border-t border-border" : ""}`}
               >
-                <p className="w-28 shrink-0 text-xl font-semibold tracking-tight text-accent">
+                <p className="w-32 shrink-0 text-lg font-semibold tracking-tight text-accent sm:text-xl">
                   {stat.value}
                 </p>
                 <p className="text-sm leading-6 text-muted">{stat.label}</p>

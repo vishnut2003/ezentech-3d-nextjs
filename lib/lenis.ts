@@ -12,6 +12,23 @@ export function registerLenis(lenis: Lenis | null) {
   instance = lenis;
 }
 
+/**
+ * Freeze page scrolling while an overlay (mobile nav) is open. Lenis's
+ * `stop()` also adds `.lenis-stopped { overflow: hidden }` on <html>; without
+ * Lenis (reduced motion) the body is locked directly. Returns the undo.
+ */
+export function lockScroll(): () => void {
+  if (instance) {
+    instance.stop();
+    return () => instance?.start();
+  }
+  const previous = document.body.style.overflow;
+  document.body.style.overflow = "hidden";
+  return () => {
+    document.body.style.overflow = previous;
+  };
+}
+
 export function scrollToElement(el: HTMLElement, offset = 0) {
   if (instance) {
     instance.scrollTo(el, { offset, duration: 1 });

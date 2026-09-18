@@ -31,12 +31,15 @@ export default function StatTiles({
       {items.map((stat) => (
         // dt precedes dd in the DOM; the column is reversed visually so
         // the figure sits above its label.
+        // Tiles are ~95px wide inside a 320px phone, so the figure steps
+        // down there and may wrap anywhere (ranges like "9.52–15.88 mm" have
+        // no natural break) rather than clip against the rounded shell.
         <div
           key={stat.label}
-          className="flex flex-col-reverse bg-background/80 p-5 backdrop-blur"
+          className="flex min-w-0 flex-col-reverse bg-background/80 p-4 backdrop-blur sm:p-5"
         >
           <dt className="mt-1.5 text-[12px] leading-5 text-muted">{stat.label}</dt>
-          <dd className="text-2xl font-semibold tracking-tight text-accent sm:text-3xl">
+          <dd className="text-xl font-semibold tracking-tight wrap-anywhere text-accent sm:text-2xl lg:text-3xl">
             {stat.value}
           </dd>
         </div>

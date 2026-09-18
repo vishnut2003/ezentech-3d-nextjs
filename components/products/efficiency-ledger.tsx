@@ -24,9 +24,11 @@ function Cell({ model }: { model?: SpecModel }) {
       </Link>
       <dl className="mt-2 space-y-1 text-[13px]">
         {rows.map(([k, v]) => (
-          <div key={k} className="flex gap-2">
-            <dt className="w-28 shrink-0 text-muted">{k}</dt>
-            <dd className="font-mono text-foreground">{v}</dd>
+          <div key={k} className="flex gap-x-2 gap-y-0.5 max-sm:flex-col">
+            <dt className="shrink-0 text-muted sm:w-28">{k}</dt>
+            <dd className="min-w-0 font-mono wrap-anywhere text-foreground">
+              {v}
+            </dd>
           </div>
         ))}
       </dl>
@@ -47,6 +49,9 @@ export default function EfficiencyLedger({ id }: { id?: string }) {
       id={id}
       caption="3-star and 5-star, side by side"
       unit="pairs"
+      // Each cell is a model name plus a five-row spec list — far too rich
+      // for the label-beside-value stack on phones.
+      stackLayout="block"
       columns={[
         { key: "three", label: "3-Star" },
         { key: "five", label: "5-Star" },

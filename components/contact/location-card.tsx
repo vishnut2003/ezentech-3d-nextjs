@@ -29,8 +29,10 @@ export default function LocationCard() {
           <dl className="mt-5 space-y-2 border-t border-border pt-5 text-sm">
             {CONTACT.email ? (
               <div className="flex gap-3">
-                <dt className="w-16 text-muted">Email</dt>
-                <dd>
+                <dt className="w-16 shrink-0 text-muted">Email</dt>
+                {/* An address has no break opportunity — wrap anywhere rather
+                    than clip against the panel edge on phones. */}
+                <dd className="min-w-0 wrap-anywhere">
                   <a href={`mailto:${CONTACT.email}`} className="text-accent hover:underline">
                     {CONTACT.email}
                   </a>
@@ -39,8 +41,8 @@ export default function LocationCard() {
             ) : null}
             {CONTACT.phone ? (
               <div className="flex gap-3">
-                <dt className="w-16 text-muted">Phone</dt>
-                <dd>
+                <dt className="w-16 shrink-0 text-muted">Phone</dt>
+                <dd className="min-w-0 wrap-anywhere">
                   <a href={`tel:${CONTACT.phone}`} className="text-accent hover:underline">
                     {CONTACT.phone}
                   </a>

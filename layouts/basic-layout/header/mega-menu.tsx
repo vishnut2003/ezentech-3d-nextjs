@@ -137,9 +137,9 @@ export default function MegaMenu({
   const open = openKey ? NAV.find((s) => s.key === openKey) : undefined;
 
   return (
-    <div ref={rootRef} className="hidden md:contents">
+    <div ref={rootRef} className="hidden lg:contents">
       <nav
-        className="hidden h-16 items-stretch gap-1 md:flex"
+        className="hidden h-16 items-stretch gap-1 lg:flex"
         aria-label="Main"
         onMouseLeave={scheduleClose}
       >
@@ -211,7 +211,8 @@ export default function MegaMenu({
           id={panelId}
           onMouseEnter={clearTimer}
           onMouseLeave={scheduleClose}
-          className={`reveal-up absolute inset-x-0 top-16 z-50 hidden max-h-[calc(100svh-4rem)] overflow-y-auto border-y md:block ${t.panel}`}
+          data-lenis-prevent
+          className={`reveal-up absolute inset-x-0 top-16 z-50 hidden max-h-[calc(100svh-4rem)] overflow-y-auto border-y lg:block ${t.panel}`}
         >
           {t.backdrop ? <div className={`${t.backdrop} absolute inset-0`} aria-hidden="true" /> : null}
           <Panel key={open.key} section={open} tone={t} onNavigate={close} latestArticle={latestArticle} />

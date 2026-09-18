@@ -38,7 +38,7 @@ export function PanelHeader({
   right?: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 border-b border-border bg-surface px-6 py-4">
+    <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-b border-border bg-surface px-6 py-4">
       <p className="flex items-center gap-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted">
         <span aria-hidden="true" className="h-px w-5 bg-accent" />
         {label}

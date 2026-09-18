@@ -79,7 +79,7 @@ function ModelRow({
         {images.map((img) => (
           <div
             key={img.src}
-            className="relative aspect-[4/3] w-28 overflow-hidden rounded-xl border border-border bg-white"
+            className="relative aspect-[4/3] w-24 overflow-hidden rounded-xl border border-border bg-white sm:w-28"
           >
             <Image
               src={img.src}

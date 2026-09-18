@@ -37,7 +37,7 @@ export default function TrustBand({
       </div>
       <Link
         href={cta.href}
-        className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-2.5 text-sm font-bold text-accent transition-opacity hover:opacity-90"
+        className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-center text-sm font-bold text-accent transition-opacity hover:opacity-90 sm:px-6"
       >
         {cta.label}
         <span aria-hidden="true">→</span>

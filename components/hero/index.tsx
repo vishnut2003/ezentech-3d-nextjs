@@ -162,7 +162,7 @@ export default function Hero() {
 
           <div ref={copyRef} className="max-w-xs shrink-0 sm:max-w-sm lg:max-w-md">
             <h1
-              className={`text-5xl font-semibold leading-[0.98] tracking-tight text-white sm:text-6xl lg:text-7xl ${reveal("delay-0")}`}
+              className={`text-[2.75rem] font-semibold leading-[0.98] tracking-tight text-white sm:text-6xl lg:text-7xl ${reveal("delay-0")}`}
             >
               Engineered
               <br />
@@ -181,13 +181,13 @@ export default function Hero() {
             >
               <Link
                 href="/contact"
-                className="rounded-full bg-white px-4 py-3.5 text-center text-sm font-bold whitespace-nowrap text-foreground transition-opacity hover:opacity-90 sm:px-8 sm:text-base"
+                className="rounded-full bg-white px-3 py-3.5 text-center text-[13px] font-bold text-foreground transition-opacity hover:opacity-90 sm:px-8 sm:text-base"
               >
                 Get a Quote
               </Link>
               <Link
                 href="/services"
-                className="rounded-full border border-white/40 px-4 py-3.5 text-center text-sm font-bold whitespace-nowrap text-white transition-colors hover:border-white sm:px-8 sm:text-base"
+                className="rounded-full border border-white/40 px-3 py-3.5 text-center text-[13px] font-bold text-white transition-colors hover:border-white sm:px-8 sm:text-base"
               >
                 Our Capabilities
               </Link>

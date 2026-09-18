@@ -384,7 +384,10 @@ export default function Capabilities() {
         />
         <div className="cap-bg relative flex flex-1 items-center rounded-t-[3rem] shadow-[0_-24px_80px_rgba(3,8,20,0.45)]">
           <div className="mx-auto grid w-full max-w-7xl gap-10 px-6 py-16 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:px-8 lg:py-24 short:lg:py-10">
-            <div className="cap-left">
+            {/* min-w-0 on both grid items: without it the flex-wrap CTA row's
+                max-content width (~280px) sizes the single auto column at
+                320px and the whole sheet runs past the viewport. */}
+            <div className="cap-left min-w-0">
               <div className="cap-heading">
                 <p className="inview-reveal flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
                   <span aria-hidden="true" className="h-px w-8 bg-accent" />
@@ -434,7 +437,7 @@ export default function Capabilities() {
                   Explore Capabilities
                   <span aria-hidden="true">→</span>
                 </Link>
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
+                <p className="min-w-0 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted">
                   NABL-accredited lab · 1M+ units / yr
                 </p>
               </div>
@@ -442,8 +445,8 @@ export default function Capabilities() {
 
             {/* Exit wrapper: the split-apart tween owns THIS element, while the
                 entrance fade owns .cap-scene inside — one owner per property. */}
-            <div className="cap-scene-exit inview-reveal reveal-delay-2">
-              <div className="cap-scene relative h-105 overflow-hidden rounded-4xl border border-border bg-surface lg:h-130 short:lg:h-[min(32.5rem,calc(100svh-8.5rem))]">
+            <div className="cap-scene-exit inview-reveal reveal-delay-2 min-w-0">
+              <div className="cap-scene relative h-72 overflow-hidden rounded-4xl border border-border bg-surface sm:h-96 lg:h-130 short:lg:h-[min(32.5rem,calc(100svh-8.5rem))]">
               {/* Engineering-grid stage + soft navy glow behind the model */}
               <div aria-hidden="true" className="stage-grid absolute inset-0" />
               <div
@@ -453,9 +456,12 @@ export default function Capabilities() {
               <CoilScene reducedMotion={reducedMotion} />
 
               {/* Caption pill */}
-              <p className="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center">
-                <span className="rounded-full border border-border bg-background/90 px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-muted shadow-sm backdrop-blur">
-                  Fin-and-tube coil block · built on our lines
+              <p className="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center px-4">
+                <span className="rounded-full border border-border bg-background/90 px-4 py-1.5 text-center text-[11px] font-medium uppercase tracking-[0.16em] whitespace-nowrap text-muted shadow-sm backdrop-blur">
+                  <span className="sm:hidden">Fin-and-tube coil block</span>
+                  <span className="hidden sm:inline">
+                    Fin-and-tube coil block · built on our lines
+                  </span>
                 </span>
               </p>
             </div>

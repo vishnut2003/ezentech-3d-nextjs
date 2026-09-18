@@ -38,7 +38,7 @@ export default function FaqList({
               +
             </span>
           </summary>
-          <p className="px-6 pb-5 pl-[4.25rem] text-sm leading-6 text-muted">{item.a}</p>
+          <p className="px-6 pb-5 text-sm leading-6 text-muted sm:pl-17">{item.a}</p>
         </details>
       ))}
     </PanelShell>

@@ -11,6 +11,7 @@ import {
   Lightformer,
 } from "@react-three/drei";
 import { CatmullRomCurve3, Vector3, type Group } from "three";
+import { COMPACT_QUERY, useMediaQuery } from "@/hooks/use-media-query";
 
 /* --------------------------------------------------------- model layout */
 
@@ -31,12 +32,15 @@ const rowsY = (col: number) =>
 
 type HeatExchangerProps = {
   reducedMotion: boolean;
+  compact: boolean;
 };
 
 /** Detailed procedural fin-and-tube heat-exchanger block: instanced fin
  *  pack, staggered copper circuit with serpentine U-bends, header manifold
- *  with curved line-set, steel end plates and feet. */
-function HeatExchanger({ reducedMotion }: HeatExchangerProps) {
+ *  with curved line-set, steel end plates and feet. `compact` scales the
+ *  block down for the narrow, near-square phone canvases (vertical fov)
+ *  so the U-bends and line-set aren't cropped at the sides. */
+function HeatExchanger({ reducedMotion, compact }: HeatExchangerProps) {
   const group = useRef<Group>(null);
 
   const fins = useMemo(
@@ -98,7 +102,7 @@ function HeatExchanger({ reducedMotion }: HeatExchangerProps) {
   });
 
   return (
-    <group ref={group} rotation={[0.16, -0.55, 0]} scale={1.02}>
+    <group ref={group} rotation={[0.16, -0.55, 0]} scale={compact ? 0.72 : 1.02}>
       {/* Aluminium fin pack */}
       <Instances limit={FIN_COUNT}>
         <boxGeometry args={[0.02, 2.16, 0.98]} />
@@ -180,6 +184,9 @@ type CoilSceneProps = {
 };
 
 export default function CoilScene({ reducedMotion }: CoilSceneProps) {
+  // Staging follows the CSS breakpoint, not canvas measurement (a late
+  // canvas measure would re-stage the model after it is already in view).
+  const compact = useMediaQuery(COMPACT_QUERY) === true;
   return (
     <Canvas
       camera={{ position: [0, 0.35, 7], fov: 35 }}
@@ -206,7 +213,7 @@ export default function CoilScene({ reducedMotion }: CoilSceneProps) {
         rotationIntensity={0.15}
         floatIntensity={0.4}
       >
-        <HeatExchanger reducedMotion={reducedMotion} />
+        <HeatExchanger reducedMotion={reducedMotion} compact={compact} />
       </Float>
 
       <ContactShadows

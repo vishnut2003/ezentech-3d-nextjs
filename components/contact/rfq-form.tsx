@@ -48,7 +48,9 @@ const volumes = [
 ];
 
 const input =
-  "w-full rounded-xl border border-border bg-background px-4 py-2.5 text-sm text-foreground placeholder:text-muted/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 user-invalid:border-red-400";
+  // 16px on phones: iOS Safari zooms the page into any control smaller than
+  // that on focus, which shifts the whole form on every tap.
+  "w-full rounded-xl border border-border bg-background px-4 py-2.5 text-base text-foreground placeholder:text-muted/60 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20 user-invalid:border-red-400 sm:text-sm";
 const label = "block text-[11px] font-semibold uppercase tracking-[0.16em] text-muted";
 
 /**

@@ -26,7 +26,7 @@ export default function Header({ latestArticle }: { latestArticle?: SpotlightArt
             width={1088}
             height={330}
             priority
-            className={solid ? "h-10 w-auto" : "hidden"}
+            className={solid ? "h-8 w-auto sm:h-10" : "hidden"}
           />
           <Image
             src="/assets/business-logos/ezentech-logo-hrz-white.png"
@@ -34,16 +34,18 @@ export default function Header({ latestArticle }: { latestArticle?: SpotlightArt
             width={1632}
             height={495}
             priority
-            className={solid ? "hidden" : "h-10 w-auto"}
+            className={solid ? "hidden" : "h-8 w-auto sm:h-10"}
           />
         </Link>
 
         <MegaMenu solid={solid} latestArticle={latestArticle} />
 
-        <div className="flex items-center gap-3">
+        {/* Logo + RFQ pill + burger must share 272px at 320 — the pill and
+            logo step down there so the RFQ CTA stays one tap away. */}
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <Link
             href={PRIMARY_ACTIONS.specs.href}
-            className={`hidden rounded-full border px-5 py-2.5 text-sm font-medium transition-colors sm:block ${
+            className={`hidden rounded-full border px-5 py-2.5 text-sm font-medium whitespace-nowrap transition-colors sm:block ${
               solid
                 ? "border-foreground/25 text-foreground hover:border-foreground"
                 : "border-white/40 text-white hover:border-white"
@@ -53,7 +55,7 @@ export default function Header({ latestArticle }: { latestArticle?: SpotlightArt
           </Link>
           <Link
             href={PRIMARY_ACTIONS.quote.href}
-            className="rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-surface transition-opacity hover:opacity-90"
+            className="rounded-full bg-accent px-4 py-2.5 text-xs font-medium whitespace-nowrap text-surface transition-opacity hover:opacity-90 sm:px-5 sm:text-sm"
           >
             {PRIMARY_ACTIONS.quote.label}
           </Link>

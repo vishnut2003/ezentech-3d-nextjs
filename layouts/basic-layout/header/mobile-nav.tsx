@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
+import { lockScroll } from "@/lib/lenis";
 import { NAV, PRIMARY_ACTIONS } from "@/lib/nav";
 
 const tones = {
@@ -39,10 +40,12 @@ const tones = {
 } as const;
 
 /**
- * Disclosure menu for phones and small tablets listing every page: each
- * section expands to its child pages. Dark over the homepage hero, light on
- * inner pages. Closes on link click, Escape, outside click, or when the
- * viewport grows past `md`.
+ * Disclosure menu for phones and tablets listing every page: each section
+ * expands to its child pages. Dark over the homepage hero, light on inner
+ * pages. Closes on link click, Escape, outside click, or when the viewport
+ * grows past `lg` (where the mega menu takes over). Page scroll is locked
+ * while open — the header isn't sticky, so the panel would otherwise scroll
+ * away with the page.
  */
 export default function MobileNav({ solid }: { solid: boolean }) {
   const [open, setOpen] = useState(false);
@@ -58,12 +61,14 @@ export default function MobileNav({ solid }: { solid: boolean }) {
     const onClick = (e: MouseEvent) => {
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     };
-    const mq = window.matchMedia("(min-width: 48rem)");
+    const mq = window.matchMedia("(min-width: 64rem)");
     const onResize = () => mq.matches && setOpen(false);
+    const unlock = lockScroll();
     document.addEventListener("keydown", onKey);
     document.addEventListener("mousedown", onClick);
     mq.addEventListener("change", onResize);
     return () => {
+      unlock();
       document.removeEventListener("keydown", onKey);
       document.removeEventListener("mousedown", onClick);
       mq.removeEventListener("change", onResize);
@@ -74,7 +79,7 @@ export default function MobileNav({ solid }: { solid: boolean }) {
     pathname === href || pathname.startsWith(`${href}/`);
 
   return (
-    <div ref={rootRef} className="md:hidden">
+    <div ref={rootRef} className="lg:hidden">
       <button
         type="button"
         aria-expanded={open}
@@ -96,6 +101,7 @@ export default function MobileNav({ solid }: { solid: boolean }) {
         <nav
           id={panelId}
           aria-label="Main"
+          data-lenis-prevent
           className={`reveal-up absolute inset-x-0 top-16 z-50 max-h-[calc(100svh-4rem)] overflow-y-auto border-b ${t.panel}`}
         >
           {t.backdrop ? <div className={`${t.backdrop} pointer-events-none absolute inset-0`} aria-hidden="true" /> : null}

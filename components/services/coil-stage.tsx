@@ -38,7 +38,7 @@ export default function CoilStage() {
   return (
     <div
       ref={ref}
-      className="relative h-[22rem] overflow-hidden rounded-3xl border border-border bg-surface sm:h-[26rem] lg:h-[30rem]"
+      className="relative h-64 overflow-hidden rounded-3xl border border-border bg-surface sm:h-80 lg:h-120"
       role="img"
       aria-label="Procedural model of a fin-and-tube heat-exchanger coil: aluminium fin pack, copper tube circuit with serpentine U-bends, header manifold and end plates"
     >
@@ -51,9 +51,12 @@ export default function CoilStage() {
           <CoilScene reducedMotion={reducedMotion} />
         </div>
       ) : null}
-      <div className="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center">
-        <p className="rounded-full border border-border bg-background/90 px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-muted backdrop-blur">
-          Fin-and-tube coil · 2-row slit-fin, 7 mm tube
+      <div className="pointer-events-none absolute inset-x-0 bottom-4 flex justify-center px-4">
+        <p className="rounded-full border border-border bg-background/90 px-4 py-1.5 text-center text-[11px] font-semibold uppercase tracking-[0.16em] whitespace-nowrap text-muted backdrop-blur">
+          <span className="sm:hidden">2-row slit-fin · 7 mm tube</span>
+          <span className="hidden sm:inline">
+            Fin-and-tube coil · 2-row slit-fin, 7 mm tube
+          </span>
         </p>
       </div>
     </div>

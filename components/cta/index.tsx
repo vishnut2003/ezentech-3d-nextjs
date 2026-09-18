@@ -7,6 +7,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { useInViewReveal } from "@/hooks/use-in-view-reveal";
+import { COMPACT_QUERY, useMediaQuery } from "@/hooks/use-media-query";
 import { useNearViewport } from "@/hooks/use-near-viewport";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
@@ -25,8 +26,13 @@ export default function Cta() {
   const sectionRef = useRef<HTMLElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
   // The wireframe canvas (three.js) only mounts once the close is near the
-  // viewport, so inner pages never pay for it on initial load.
+  // viewport, so inner pages never pay for it on initial load — and never
+  // below lg: the primitives are staged at x ≈ ±4 units, entirely outside a
+  // portrait canvas, so a phone would pay for a WebGL context that draws
+  // nothing visible.
   const { near } = useNearViewport(sectionRef);
+  const compact = useMediaQuery(COMPACT_QUERY);
+  const showWireframes = near && compact === false;
   const inView = useInViewReveal(sectionRef);
 
   useEffect(() => {
@@ -101,7 +107,7 @@ export default function Cta() {
     >
       <div className="hero-grid-fine absolute inset-0" aria-hidden="true" />
       <div className="hero-floor" aria-hidden="true" />
-      {near ? <CtaWireframes reducedMotion={reducedMotion} /> : null}
+      {showWireframes ? <CtaWireframes reducedMotion={reducedMotion} /> : null}
 
       <div className="cta-inner relative z-10 mx-auto flex min-h-svh w-full max-w-7xl flex-col items-center justify-center px-6 py-24 text-center lg:px-8">
         <div className="cta-stagger flex flex-col items-center">

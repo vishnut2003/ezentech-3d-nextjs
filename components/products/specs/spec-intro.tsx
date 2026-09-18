@@ -1,4 +1,5 @@
 import Container from "@/components/ui/container";
+import StatTiles from "@/components/ui/stat-tiles";
 import { specModels } from "@/data/products/specs";
 
 const terms = [
@@ -88,23 +89,7 @@ export default function SpecIntro() {
             installation kit.
           </p>
 
-          <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-border bg-border">
-            {stats.map((stat) => (
-              // dt precedes dd in the DOM; the column is reversed visually so
-              // the figure sits above its label.
-              <div
-                key={stat.label}
-                className="flex flex-col-reverse bg-background/80 p-5 backdrop-blur"
-              >
-                <dt className="mt-1.5 text-[12px] leading-5 text-muted">
-                  {stat.label}
-                </dt>
-                <dd className="text-2xl font-semibold tracking-tight text-accent sm:text-3xl">
-                  {stat.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
+          <StatTiles items={stats} className="mt-8" />
 
           <p className="mt-6 max-w-xl text-sm leading-6 text-muted">
             The tables below reproduce the manufacturer specification sheet

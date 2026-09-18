@@ -3,7 +3,8 @@ import type { SpecGroup } from "@/data/products/specs";
 /**
  * Semantic grouped parameter table: one <tbody> per group with a
  * row-group header, row headers on the parameter names, mono values.
- * Two columns fit a 360px viewport, so no horizontal scroll is needed.
+ * Two columns fit a 320px viewport; cells may wrap anywhere so a long
+ * mono value (packing dims) can never push the table past the shell.
  */
 export default function SpecTable({
   caption,
@@ -42,11 +43,11 @@ export default function SpecTable({
               >
                 <th
                   scope="row"
-                  className="w-1/2 px-4 py-2.5 text-left font-medium text-foreground"
+                  className="w-1/2 px-4 py-2.5 text-left font-medium wrap-anywhere text-foreground"
                 >
                   {row.label}
                 </th>
-                <td className="px-4 py-2.5 font-mono text-[13px] text-muted">
+                <td className="px-4 py-2.5 font-mono text-[13px] wrap-anywhere text-muted">
                   {row.value}
                   {row.unit && row.value !== "NA" ? (
                     <span className="ml-1 text-muted/70">{row.unit}</span>

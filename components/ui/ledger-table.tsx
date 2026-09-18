@@ -17,6 +17,11 @@ export interface LedgerRow {
  * Multi-column engineered table. A real <table> from `lg` up; below that
  * each row stacks into a definition list so wide ledgers never force a
  * horizontal scroll on phones.
+ *
+ * `stackLayout` controls the stacked (below-lg) cell layout: "grid" puts the
+ * column label beside the value (short cells); "block" puts it above the
+ * value at full width — use it when cells hold rich content (nested lists,
+ * long mono strings) that would be crushed in a ~120px column on phones.
  */
 export default function LedgerTable({
   caption,
@@ -25,6 +30,7 @@ export default function LedgerTable({
   columns,
   rows,
   numbered = true,
+  stackLayout = "grid",
   id,
   className,
 }: {
@@ -34,6 +40,7 @@ export default function LedgerTable({
   columns: LedgerColumn[];
   rows: LedgerRow[];
   numbered?: boolean;
+  stackLayout?: "grid" | "block";
   id?: string;
   className?: string;
 }) {
@@ -123,13 +130,24 @@ export default function LedgerTable({
                 ) : null}
               </span>
             </p>
-            <dl className="mt-3 space-y-2">
+            <dl className={stackLayout === "block" ? "mt-3 space-y-4" : "mt-3 space-y-2"}>
               {columns.map((col) => (
-                <div key={col.key} className="grid grid-cols-[7.5rem_1fr] gap-3 text-sm">
-                  <dt className="pt-0.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-muted">
+                <div
+                  key={col.key}
+                  className={
+                    stackLayout === "block"
+                      ? "text-sm"
+                      : "grid grid-cols-[6rem_minmax(0,1fr)] gap-3 text-sm sm:grid-cols-[7.5rem_minmax(0,1fr)]"
+                  }
+                >
+                  <dt
+                    className={`text-[11px] font-semibold uppercase tracking-[0.14em] text-muted ${
+                      stackLayout === "block" ? "mb-1.5" : "pt-0.5"
+                    }`}
+                  >
                     {col.label}
                   </dt>
-                  <dd className="leading-6 text-muted">
+                  <dd className="min-w-0 leading-6 wrap-anywhere text-muted">
                     {row.cells[col.key] ?? <span className="text-muted/50">—</span>}
                   </dd>
                 </div>

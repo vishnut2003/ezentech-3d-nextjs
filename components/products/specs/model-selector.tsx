@@ -41,7 +41,9 @@ function Segmented<T extends string>({
 }) {
   return (
     <div className="flex items-center gap-2.5">
-      <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
+      {/* Caption hidden on phones so both groups share one 272px line; the
+          group keeps its aria-label and the options are self-explanatory. */}
+      <span className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-muted sm:inline">
         {label}
       </span>
       <div
@@ -57,7 +59,7 @@ function Segmented<T extends string>({
               type="button"
               aria-pressed={active}
               onClick={() => onChange(o.value)}
-              className={`rounded-full px-3 py-1 text-xs font-semibold transition-colors ${
+              className={`rounded-full px-2 py-1 text-[11px] font-semibold whitespace-nowrap transition-colors sm:px-3 sm:text-xs ${
                 active
                   ? "bg-accent text-white shadow-sm"
                   : "text-muted hover:text-foreground"
@@ -112,12 +114,13 @@ export default function ModelSelector({ models }: { models: ModelSummary[] }) {
       className="print-hidden sticky top-0 z-40 border-b border-border bg-background/90 shadow-[0_8px_30px_rgba(20,24,31,0.05)] backdrop-blur"
     >
       <div className="mx-auto w-full max-w-7xl px-6 lg:px-8">
-        {/* Row 1 — filters + live count */}
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-2.5 py-3">
+        {/* Row 1 — filters + live count. On phones the two groups sit on one
+            line and the count is dropped, so the bar is two short rows. */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2.5 py-2.5 sm:gap-x-6 sm:py-3">
           <Segmented label="Type" options={typeOptions} value={type} onChange={setType} />
           <Segmented label="Rating" options={starOptions} value={stars} onChange={setStars} />
           <p
-            className="ml-auto text-[11px] font-semibold uppercase tracking-[0.16em] text-muted"
+            className="ml-auto hidden text-[11px] font-semibold uppercase tracking-[0.16em] text-muted sm:block"
             aria-live="polite"
           >
             <span className="text-foreground">{visible.length}</span> of{" "}
@@ -125,7 +128,9 @@ export default function ModelSelector({ models }: { models: ModelSummary[] }) {
           </p>
         </div>
 
-        {/* Row 2 — jump pills: wrap on tablet+, scroll (no bar) on phones */}
+        {/* Row 2 — jump pills: wrap on tablet+, scroll (no bar) on phones.
+            The strip fades out at its right edge on phones so it reads as
+            scrollable; data-lenis-prevent keeps wheel input inside it. */}
         <nav
           aria-label="Jump to model"
           className="flex items-center gap-3 border-t border-border/70 py-2.5"
@@ -133,7 +138,10 @@ export default function ModelSelector({ models }: { models: ModelSummary[] }) {
           <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted">
             Jump to
           </span>
-          <ul className="no-scrollbar -mr-6 flex gap-1.5 overflow-x-auto pr-6 sm:mr-0 sm:flex-wrap sm:overflow-visible sm:pr-0">
+          <ul
+            data-lenis-prevent
+            className="no-scrollbar -mr-6 flex gap-1.5 overflow-x-auto pr-10 mask-[linear-gradient(to_right,#000_calc(100%-2.5rem),transparent)] sm:mr-0 sm:flex-wrap sm:overflow-visible sm:pr-0 sm:mask-none"
+          >
             {visible.map((m) => (
               <li key={m.slug} className="shrink-0">
                 <a

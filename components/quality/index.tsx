@@ -152,7 +152,7 @@ export default function Quality() {
                     i > 0 ? "border-t border-border" : ""
                   }`}
                 >
-                  <p className="w-24 shrink-0 text-2xl font-semibold tracking-tight text-accent">
+                  <p className="w-28 shrink-0 text-xl font-semibold tracking-tight text-accent sm:text-2xl">
                     {stat.value}
                   </p>
                   <p className="text-sm leading-6 text-muted">{stat.label}</p>

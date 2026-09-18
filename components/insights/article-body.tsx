@@ -53,10 +53,10 @@ export default function ArticleBody({ blocks }: { blocks: Block[] }) {
                   <tbody>
                     {block.rows.map(([k, v]) => (
                       <tr key={k} className="border-t border-border first:border-t-0 even:bg-surface/60">
-                        <th scope="row" className="w-1/2 px-4 py-2.5 text-left font-medium text-foreground">
+                        <th scope="row" className="w-1/2 px-4 py-2.5 text-left font-medium wrap-anywhere text-foreground">
                           {k}
                         </th>
-                        <td className="px-4 py-2.5 font-mono text-[13px] text-muted">{v}</td>
+                        <td className="px-4 py-2.5 font-mono text-[13px] wrap-anywhere text-muted">{v}</td>
                       </tr>
                     ))}
                   </tbody>

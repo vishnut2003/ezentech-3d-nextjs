@@ -2,8 +2,9 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useEffect, useRef, useState, type ComponentType } from "react";
+import { useRef, type ComponentType } from "react";
 import { useInViewReveal } from "@/hooks/use-in-view-reveal";
+import { COMPACT_QUERY, useMediaQuery } from "@/hooks/use-media-query";
 import { useNearViewport } from "@/hooks/use-near-viewport";
 import type { StageSceneProps } from "./scene";
 
@@ -21,6 +22,8 @@ type Slide = {
   body: string;
   cta: { href: string; label: string };
   caption: string;
+  /** Phone-width caption — the full one wraps into a two-line pill. */
+  captionShort: string;
   Scene: ComponentType<StageSceneProps>;
 };
 
@@ -33,6 +36,7 @@ const slides: Slide[] = [
     body: "Split, window, inverter and IDU/ODU ranges — assembled, tested and boxed on the same lines that make their parts.",
     cta: { href: "/products", label: "View Products" },
     caption: "01 — Split indoor unit · assembled on our lines",
+    captionShort: "01 — Split indoor unit",
     Scene: ProductScene,
   },
   {
@@ -43,6 +47,7 @@ const slides: Slide[] = [
     body: "IDU and ODU chassis developed together — matched airflow, refrigerant line and mounting, ready to carry your brand.",
     cta: { href: "/products/idu-odu", label: "Explore IDU / ODU" },
     caption: "02 — Outdoor unit · engineered as a matched pair",
+    captionShort: "02 — Outdoor unit",
     Scene: OduScene,
   },
   {
@@ -53,6 +58,7 @@ const slides: Slide[] = [
     body: "From compact window units to high-efficiency inverter ranges — one manufacturing partner across every format your market asks for.",
     cta: { href: "/products", label: "See the Full Range" },
     caption: "03 — Window unit · the compact format",
+    captionShort: "03 — Window unit",
     Scene: WindowScene,
   },
 ];
@@ -74,15 +80,7 @@ const slides: Slide[] = [
 export default function ProductReveal() {
   // Model staging follows the CSS breakpoint, not canvas measurement.
   // `null` until measured so nothing mounts on a guess.
-  const [compact, setCompact] = useState<boolean | null>(null);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 1023px)");
-    const apply = () => setCompact(mq.matches);
-    apply();
-    mq.addEventListener("change", apply);
-    return () => mq.removeEventListener("change", apply);
-  }, []);
+  const compact = useMediaQuery(COMPACT_QUERY);
 
   return (
     <div
@@ -131,7 +129,8 @@ function ProductSlide({
   slide: Slide;
   compact: boolean | null;
 }) {
-  const { n, copyClass, eyebrow, title, body, cta, caption, Scene } = slide;
+  const { n, copyClass, eyebrow, title, body, cta, caption, captionShort, Scene } =
+    slide;
   const slideRef = useRef<HTMLDivElement>(null);
   const copyRef = useRef<HTMLDivElement>(null);
   const { near, visible } = useNearViewport(slideRef);
@@ -197,8 +196,9 @@ function ProductSlide({
       {/* Caption pill — in flow under the copy below lg, pinned to the
           frame's bottom edge at lg. */}
       <p className="pointer-events-none relative z-10 flex justify-center px-6 pb-6 lg:absolute lg:inset-x-0 lg:bottom-6 lg:px-0 lg:pb-0">
-        <span className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-[11px] font-medium uppercase tracking-[0.16em] text-white/50 backdrop-blur">
-          {caption}
+        <span className="rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-center text-[11px] font-medium uppercase tracking-[0.16em] whitespace-nowrap text-white/50 backdrop-blur">
+          <span className="sm:hidden">{captionShort}</span>
+          <span className="hidden sm:inline">{caption}</span>
         </span>
       </p>
     </div>
