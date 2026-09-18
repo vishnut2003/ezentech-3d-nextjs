@@ -174,16 +174,20 @@ export default function Hero() {
               Four plants, one-million-unit capacity — chassis, coil, copper
               tubing and fascia, under one roof.
             </p>
-            <div className={`mt-7 flex flex-wrap gap-3 ${reveal("delay-350")}`}>
+            {/* Side by side at every width: a two-column grid inside the
+                narrow mobile copy column, a natural row from sm up. */}
+            <div
+              className={`mt-7 grid grid-cols-2 gap-3 sm:flex sm:flex-wrap ${reveal("delay-350")}`}
+            >
               <Link
                 href="/contact"
-                className="rounded-full bg-white px-8 py-3.5 text-base font-bold text-foreground transition-opacity hover:opacity-90"
+                className="rounded-full bg-white px-4 py-3.5 text-center text-sm font-bold whitespace-nowrap text-foreground transition-opacity hover:opacity-90 sm:px-8 sm:text-base"
               >
                 Get a Quote
               </Link>
               <Link
                 href="/services"
-                className="rounded-full border border-white/40 px-8 py-3.5 text-base font-bold text-white transition-colors hover:border-white"
+                className="rounded-full border border-white/40 px-4 py-3.5 text-center text-sm font-bold whitespace-nowrap text-white transition-colors hover:border-white sm:px-8 sm:text-base"
               >
                 Our Capabilities
               </Link>

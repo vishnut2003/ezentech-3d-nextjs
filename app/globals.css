@@ -179,6 +179,26 @@ html {
   }
 }
 
+/* Mobile entrance for the homepage: below lg there is no scroll-driven
+   motion at all — each section's content rises in once when the section
+   first enters the viewport (data-inview is set by useInViewReveal). Scoped
+   to width < 64rem so it never fights the desktop GSAP inline styles; no
+   attribute (no JS) means content is simply visible. */
+@media (width < 64rem) {
+  [data-inview="pending"] .inview-reveal {
+    opacity: 0;
+  }
+  [data-inview="true"] .inview-reveal {
+    animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-inview] .inview-reveal {
+    opacity: 1;
+    animation: none;
+  }
+}
+
 /* Technical specifications: the sticky selector writes the active filters
    onto #spec-models; CSS does the hiding so every model stays in the HTML
    (no JS, crawlers, print) and nothing is duplicated into the client. */

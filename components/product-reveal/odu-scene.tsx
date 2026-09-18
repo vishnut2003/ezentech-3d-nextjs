@@ -9,6 +9,7 @@ import {
   RoundedBox,
 } from "@react-three/drei";
 import { ExtrudeGeometry, Shape } from "three";
+import type { StageSceneProps } from "./scene";
 
 /* Clean white body plastic; grille bars a light silver. */
 const BODY = "#f5f6f7";
@@ -87,8 +88,8 @@ function OduUnit({ compact }: OduUnitProps) {
 
   return (
     <group
-      position={compact ? [0, 0.55, 0] : [1.75, 0.15, 0]}
-      scale={compact ? 0.46 : 0.72}
+      position={compact ? [0, 0.2, 0] : [1.75, 0.15, 0]}
+      scale={compact ? 0.9 : 0.72}
       rotation={[0.14, 0.58, 0]}
     >
       {/* Wrapped-metal shell with clearcoat */}
@@ -274,16 +275,16 @@ function OduUnit({ compact }: OduUnitProps) {
   );
 }
 
-type OduSceneProps = {
-  compact: boolean;
-};
-
-export default function OduScene({ compact }: OduSceneProps) {
+export default function OduScene({
+  compact,
+  frameloop = "always",
+}: StageSceneProps) {
   return (
     <Canvas
       camera={{ position: [0, 0.35, 7.5], fov: 35 }}
       dpr={[1, 2]}
       gl={{ antialias: true, alpha: true }}
+      frameloop={frameloop}
       // No scroll re-measure — see scene.tsx: prevents the exit scale on
       // .reveal-inner from resizing the GL viewport mid-tween.
       resize={{ scroll: false }}

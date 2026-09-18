@@ -72,14 +72,22 @@ export default function CtaWireframes({
       const wrap = wrapRef.current;
       if (!wrap) return;
 
-      ScrollTrigger.create({
-        trigger: wrap,
-        start: "top bottom",
-        end: "bottom top",
-        invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          progress.current = self.progress;
-        },
+      // Scroll-linked drift at lg only; below lg the progress stays at its
+      // 0.5 rest value, so the primitives hold position and just idle-turn.
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 64rem)", () => {
+        ScrollTrigger.create({
+          trigger: wrap,
+          start: "top bottom",
+          end: "bottom top",
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            progress.current = self.progress;
+          },
+        });
+        return () => {
+          progress.current = 0.5;
+        };
       });
     },
     { scope: wrapRef, dependencies: [reducedMotion], revertOnUpdate: true },

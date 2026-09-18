@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
+import { useInViewReveal } from "@/hooks/use-in-view-reveal";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -18,11 +19,13 @@ const certifications = [
 /**
  * Quality & trust: the white sheet that slides up over the zooming-out
  * product stage (overlap margin applied by the capabilities pin). Content
- * staggers in once it's on screen.
+ * staggers in once it's on screen. Desktop (lg) only — below lg the sheet
+ * flows naturally and content rises in once on entry (useInViewReveal).
  */
 export default function Quality() {
   const sectionRef = useRef<HTMLElement>(null);
   const [reducedMotion, setReducedMotion] = useState(false);
+  const inView = useInViewReveal(sectionRef);
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -38,55 +41,60 @@ export default function Quality() {
       if (!section) return;
       if (reducedMotion) return;
 
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: section,
-            start: "top 60%",
-            toggleActions: "play none none reverse",
-          },
-          defaults: { ease: "power3.out" },
-        })
-        .from(".quality-heading > *", {
-          y: 44,
-          autoAlpha: 0,
-          duration: 0.7,
-          stagger: 0.09,
-        })
-        .from(
-          ".quality-card",
-          { y: 28, autoAlpha: 0, duration: 0.55, stagger: 0.07 },
-          "-=0.35",
-        );
+      // Scroll-driven work at lg only, same gate as the hero; matchMedia
+      // reverts it all on breakpoint change.
+      const mm = gsap.matchMedia();
+      mm.add("(min-width: 64rem)", () => {
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: section,
+              start: "top 60%",
+              toggleActions: "play none none reverse",
+            },
+            defaults: { ease: "power3.out" },
+          })
+          .from(".quality-heading > *", {
+            y: 44,
+            autoAlpha: 0,
+            duration: 0.7,
+            stagger: 0.09,
+          })
+          .from(
+            ".quality-card",
+            { y: 28, autoAlpha: 0, duration: 0.55, stagger: 0.07 },
+            "-=0.35",
+          );
 
-      // Viewing hold: pin the sheet for ~100svh of dead scroll after it
-      // arrives, the progress line filling 1:1 with scroll and the content
-      // drifting up a touch — same affordance as the capabilities hold.
-      // Pins .quality-pin (not the section) so the -100svh overlap margin
-      // the capabilities pin puts on #quality stays out of the pin math.
-      // (The hint's class has opacity-0, so no-JS and reduced-motion users
-      // never see it.)
-      gsap.set(".quality-scroll-hint", { autoAlpha: 1 });
-      gsap
-        .timeline({
-          scrollTrigger: {
-            trigger: section,
-            pin: ".quality-pin",
-            start: "top top",
-            end: "+=100%",
-            scrub: 0.4,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-          },
-        })
-        .fromTo(
-          ".quality-scroll-hint-fill",
-          { scaleY: 0 },
-          { scaleY: 1, duration: 0.9, ease: "none" },
-          0,
-        )
-        .to(".quality-inner", { y: -14, duration: 0.9, ease: "none" }, 0)
-        .to(".quality-scroll-hint", { autoAlpha: 0, duration: 0.1 }, 0.9);
+        // Viewing hold: pin the sheet for ~100svh of dead scroll after it
+        // arrives, the progress line filling 1:1 with scroll and the content
+        // drifting up a touch — same affordance as the capabilities hold.
+        // Pins .quality-pin (not the section) so the -100svh overlap margin
+        // the capabilities pin puts on #quality stays out of the pin math.
+        // (The hint's class has opacity-0, so no-JS and reduced-motion users
+        // never see it.)
+        gsap.set(".quality-scroll-hint", { autoAlpha: 1 });
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: section,
+              pin: ".quality-pin",
+              start: "top top",
+              end: "+=100%",
+              scrub: 0.4,
+              anticipatePin: 1,
+              invalidateOnRefresh: true,
+            },
+          })
+          .fromTo(
+            ".quality-scroll-hint-fill",
+            { scaleY: 0 },
+            { scaleY: 1, duration: 0.9, ease: "none" },
+            0,
+          )
+          .to(".quality-inner", { y: -14, duration: 0.9, ease: "none" }, 0)
+          .to(".quality-scroll-hint", { autoAlpha: 0, duration: 0.1 }, 0.9);
+      });
     },
     { scope: sectionRef, dependencies: [reducedMotion], revertOnUpdate: true },
   );
@@ -97,6 +105,7 @@ export default function Quality() {
       id="quality"
       className="relative z-30"
       aria-label="Quality, certifications and trust"
+      data-inview={inView}
     >
       {/* Pinned as one unit for the viewing hold — backdrop included, so the
           rounded-corner notches never expose the white spacer mid-pin. */}
@@ -111,16 +120,16 @@ export default function Quality() {
         <div className="quality-inner mx-auto w-full max-w-7xl px-6 py-12 lg:px-8">
           <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div className="quality-heading">
-              <p className="flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
+              <p className="inview-reveal flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.22em] text-accent">
                 <span aria-hidden="true" className="h-px w-8 bg-accent" />
                 Quality &amp; certifications
               </p>
-              <h2 className="mt-3 text-3xl font-semibold leading-[1.05] tracking-tight sm:text-4xl">
+              <h2 className="inview-reveal reveal-delay-1 mt-3 text-3xl font-semibold leading-[1.05] tracking-tight sm:text-4xl">
                 Tested like it ships.
                 <br />
                 <span className="text-accent">Certified like it matters.</span>
               </h2>
-              <p className="mt-3 max-w-xl text-base leading-7 text-muted">
+              <p className="inview-reveal reveal-delay-2 mt-3 max-w-xl text-base leading-7 text-muted">
                 Every unit passes through our{" "}
                 <span className="font-semibold text-foreground">
                   NABL-accredited psychrometric lab
@@ -131,7 +140,7 @@ export default function Quality() {
             </div>
 
             {/* Featured proof stats */}
-            <div className="quality-card rounded-3xl border border-border bg-background/70 p-5 backdrop-blur">
+            <div className="quality-card inview-reveal reveal-delay-3 rounded-3xl border border-border bg-background/70 p-5 backdrop-blur">
               {[
                 { value: "100%", label: "Units through the psychrometric lab" },
                 { value: "1M+", label: "Annual unit capacity, four plants" },
@@ -153,11 +162,14 @@ export default function Quality() {
           </div>
 
           <div className="mt-7 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {certifications.map((certification) => (
-              // Outer element is GSAP's entrance target only; the hover
-              // transition lives on the inner wrapper so CSS and GSAP never
-              // animate the same element.
-              <div key={certification.label} className="quality-card group">
+            {certifications.map((certification, i) => (
+              // Outer element is the entrance target only (GSAP at lg, CSS
+              // in-view below); the hover transition lives on the inner
+              // wrapper so entrance and hover never animate the same element.
+              <div
+                key={certification.label}
+                className={`quality-card inview-reveal reveal-delay-${i + 1} group`}
+              >
                 <div className="rounded-2xl border border-border bg-background/70 p-4 backdrop-blur transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-lg hover:shadow-accent/5">
                 <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent/10 text-accent">
                   <svg
@@ -193,7 +205,7 @@ export default function Quality() {
           </div>
 
           {/* Trust band — inverted navy */}
-          <div className="quality-card mt-7 flex flex-wrap items-center justify-between gap-5 rounded-3xl bg-linear-to-r from-accent to-[#1c2666] p-6">
+          <div className="quality-card inview-reveal reveal-delay-2 mt-7 flex flex-wrap items-center justify-between gap-5 rounded-3xl bg-linear-to-r from-accent to-[#1c2666] p-6">
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/60">
                 Recognised by the brands we build for

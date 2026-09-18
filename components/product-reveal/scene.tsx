@@ -11,15 +11,18 @@ type StagedUnitProps = {
 /** The finished split AC (realistic product materials), held perfectly
  *  still on a 3/4 hero angle — the reveal's scale-up is the only motion,
  *  so the model never appears to move on its own when it comes into view.
- *  Staged right of the copy on desktop, centred above it on small screens.
+ *  Staged right of the copy on desktop; on small screens the canvas is a
+ *  short block of its own above the copy, so the model sits centred in it.
  *  `compact` comes from a CSS breakpoint (matchMedia), NOT from canvas
  *  viewport measurement — a late canvas measure was flipping the layout
  *  and teleporting the model after it came into view. */
 function StagedUnit({ compact }: StagedUnitProps) {
   return (
     <group
-      position={compact ? [0, 0.5, 0] : [1.7, -0.05, 0]}
-      scale={compact ? 0.55 : 0.85}
+      // Compact canvas is a short block (vertical fov), so the model is
+      // scaled to fill the width rather than the height.
+      position={compact ? [0, 0.05, 0] : [1.7, -0.05, 0]}
+      scale={compact ? 1.05 : 0.85}
       rotation={[0.18, -0.7, 0]}
     >
       <AirConditioner mode="product" louverOpen wireframe={false} />
@@ -27,16 +30,22 @@ function StagedUnit({ compact }: StagedUnitProps) {
   );
 }
 
-type ProductSceneProps = {
+export type StageSceneProps = {
   compact: boolean;
+  /** "never" pauses the render loop while the slide is scrolled out of view. */
+  frameloop?: "always" | "never";
 };
 
-export default function ProductScene({ compact }: ProductSceneProps) {
+export default function ProductScene({
+  compact,
+  frameloop = "always",
+}: StageSceneProps) {
   return (
     <Canvas
       camera={{ position: [0, 0.35, 7.5], fov: 35 }}
       dpr={[1, 2]}
       gl={{ antialias: true, alpha: true }}
+      frameloop={frameloop}
       // No scroll re-measure: the exit tween CSS-scales .reveal-inner while
       // scrolling, and a scroll-triggered getBoundingClientRect would resize
       // the GL viewport to the transformed rect — the model would double-
